@@ -1,0 +1,1 @@
+fetch('events.json').then(r=>r.json()).then(d=>{let u=document.getElementById('events');d.forEach(e=>{let l=document.createElement('li');l.textContent=e.date+' '+e.time+' '+e.title;u.appendChild(l);});});
