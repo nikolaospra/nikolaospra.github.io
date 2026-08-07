@@ -1,7 +1,7 @@
 {
   "name": "Ι.Ν. Παναγίας Ακαθίστου Ύμνου Οίας",
   "short_name": "Οία",
-  "start_url": "/oia-calendar/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#7b1e1e",
