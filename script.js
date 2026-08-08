@@ -150,7 +150,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
     document.createElement('iframe');
 
   iframe.src =
-    `/saint-day?month=${month}&day=${day}`;
+  `https://oia-parish-admin.nikolaos-pra.workers.dev/saint-day?month=${month}&day=${day}`;
 
   iframe.style.width = '100%';
   iframe.style.height = '75vh';
