@@ -166,6 +166,7 @@ button{padding:15px;border:0;border-radius:13px;background:#702727;color:#fff;fo
 <div class="note"><strong>Προσοχή:</strong> το ημερολόγιο δεν αλλάζει ακόμη με την επιλογή του αρχείου. Θα γίνει πρώτα έλεγχος των ημερομηνιών και των ακολουθιών.</div>
 </div></div>
 <script>
+alert("SCRIPT OK");
 const f = document.getElementById("file");
 const s = document.getElementById("status");
 const p = document.getElementById("preview");
