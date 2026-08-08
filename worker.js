@@ -2,63 +2,6 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (request.method === "GET" && url.pathname === "/saint-day") {
-      try {
-        const month = Number(url.searchParams.get("month"));
-        const day = Number(url.searchParams.get("day"));
-
-        if (
-          !Number.isInteger(month) ||
-          !Number.isInteger(day) ||
-          month < 1 ||
-          month > 12 ||
-          day < 1 ||
-          day > 31
-        ) {
-          return new Response("Μη έγκυρη ημερομηνία.", {
-            status: 400
-          });
-        }
-
-        const mm = String(month).padStart(2, "0");
-        const dd = String(day).padStart(2, "0");
-
-        const saintUrl =
-          `https://www.saint.gr/${mm}/${dd}/index.aspx`;
-
-        const response = await fetch(saintUrl);
-
-        if (!response.ok) {
-          return new Response(
-            "Δεν ήταν δυνατή η φόρτωση του εορτολογίου.",
-            {
-              status: 502
-            }
-          );
-        }
-
-        const html = await response.text();
-
-        return new Response(html, {
-          headers: {
-            "content-type": "text/html; charset=UTF-8",
-            "cache-control": "no-store"
-          }
-        });
-
-      } catch (error) {
-        return new Response(
-          "Σφάλμα εορτολογίου: " +
-          (error instanceof Error
-            ? error.message
-            : String(error)),
-          {
-            status: 500
-          }
-        );
-      }
-    }
-
     if (request.method === "GET") {
       return htmlResponse(loginPage());
     }
