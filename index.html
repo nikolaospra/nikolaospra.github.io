@@ -25,7 +25,9 @@ OneSignalDeferred.push(async function(OneSignal) {
 });
 </script>
 
-</head><body><div class='container'><h1>Πρόγραμμα ιερών ακολουθιών ιερού ενοριακού ναού Παναγίας Ακαθίστου Ύμνου Οίας "Παναγία Πλατσανή"</h1><p><a class='btn' href='calendar.ics'>📅 Προσθήκη στο Ημερολόγιο</a><button id="installBtn" class="btn secondary" type="button" onclick="document.getElementById('installHelp').hidden=false">📱 Προσθήκη στην Αφετηρία</button></p><ul id='events'></ul>
+</head><body><div class='container'><h1>Πρόγραμμα ιερών ακολουθιών ιερού ενοριακού ναού Παναγίας Ακαθίστου Ύμνου Οίας "Παναγία Πλατσανή"</h1>
+<div id="nextEventCard" class="next-event-card"></div>
+<p><a class='btn' href='calendar.ics'>📅 Προσθήκη στο Ημερολόγιο</a><button id="installBtn" class="btn secondary" type="button" onclick="document.getElementById('installHelp').hidden=false">📱 Προσθήκη στην Αφετηρία</button></p><ul id='events'></ul>
 <div id="installHelp" class="install-help" hidden>
   <div class="install-card" role="dialog" aria-modal="true" aria-labelledby="installTitle">
     <button id="closeInstall" class="install-close" type="button" aria-label="Κλείσιμο" onclick="document.getElementById('installHelp').setAttribute('hidden','')">×</button>

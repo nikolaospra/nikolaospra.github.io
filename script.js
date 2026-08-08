@@ -174,7 +174,95 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       upcoming.length > 0
         ? upcoming[0]
         : null;
+/*
+ * ==============================
+ * ΜΕΓΑΛΗ ΚΑΡΤΑ ΕΠΟΜΕΝΗΣ ΑΚΟΛΟΥΘΙΑΣ
+ * ==============================
+ */
 
+const nextEventCard =
+  document.getElementById('nextEventCard');
+
+if (nextEventCard && nextEvent) {
+
+  const countdownText = () => {
+
+    const difference =
+      nextEvent.dateObj.getTime() - Date.now();
+
+    if (difference <= 0) {
+      return 'Ξεκινά τώρα';
+    }
+
+    const totalMinutes =
+      Math.floor(difference / 60000);
+
+    const days =
+      Math.floor(totalMinutes / 1440);
+
+    const hours =
+      Math.floor(
+        (totalMinutes % 1440) / 60
+      );
+
+    const minutes =
+      totalMinutes % 60;
+
+    if (days > 0) {
+      return `Σε ${days} ημέρα${days === 1 ? '' : 'ες'} και ${hours} ώρ.`;
+    }
+
+    if (hours > 0) {
+      return `Σε ${hours} ώρ. και ${minutes}΄`;
+    }
+
+    return `Σε ${minutes}΄`;
+  };
+
+  nextEventCard.innerHTML = `
+    <div class="next-card-label">
+      ⭐ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
+    </div>
+
+    <div class="next-card-date">
+      ${nextEvent.date}
+    </div>
+
+    <div class="next-card-time">
+      ${nextEvent.time}
+    </div>
+
+    <div class="next-card-title">
+      ${nextEvent.summary}
+    </div>
+
+    ${
+      nextEvent.location
+        ? `
+          <div class="next-card-location">
+            📍 ${nextEvent.location}
+          </div>
+        `
+        : ''
+    }
+
+    <div id="nextCountdown" class="next-card-countdown">
+      ${countdownText()}
+    </div>
+  `;
+
+  const countdown =
+    document.getElementById('nextCountdown');
+
+  setInterval(() => {
+
+    if (countdown) {
+      countdown.textContent =
+        countdownText();
+    }
+
+  }, 30000);
+}
     /*
      * Εμφάνιση γεγονότων.
      */
