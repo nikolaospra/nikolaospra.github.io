@@ -136,8 +136,8 @@ button.btn{font-family:inherit;cursor:pointer}
 }
 @media (max-width:600px){
   .church-photo{
-    max-width:200px;
-    max-height:170px;
+    max-width:180px;
+    max-height:150px;
     border-radius:16px;
   }
 }
