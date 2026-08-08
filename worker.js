@@ -238,10 +238,10 @@ document.getElementById("next").onclick = async function () {
         let result = data;
 
         if (data && typeof data.response === "string") {
-            let text = data.response
-                .replace(/```json/gi, "")
-                .replace(/```/g, "")
-                .trim();
+            let text = String(data.response)
+  .replace(new RegExp(String.fromCharCode(96) + "{3}json", "gi"), "")
+  .replace(new RegExp(String.fromCharCode(96) + "{3}", "g"), "")
+  .trim();
 
             try {
                 result = JSON.parse(text);
