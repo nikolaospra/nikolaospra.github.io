@@ -94,6 +94,72 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
     /*
      * Κρατάμε μόνο τα μελλοντικά γεγονότα.
      */
+     function showCalendar(event) {
+  const container = document.querySelector('.container');
+
+  if (!container) return;
+
+  container.querySelectorAll(':scope > *').forEach(el => {
+    el.dataset.calendarHidden = 'true';
+    el.style.display = 'none';
+  });
+
+  const page = document.createElement('div');
+
+  page.id = 'calendar-page';
+
+  page.innerHTML = `
+    <div class="calendar-header">
+      <button id="calendar-back" class="calendar-back">
+        ← Επιστροφή στο πρόγραμμα
+      </button>
+
+      <div class="calendar-title">
+        ✝️ Εορτολόγιο
+      </div>
+
+      <div class="calendar-date">
+        ${event.date}
+      </div>
+    </div>
+  `;
+
+  container.appendChild(page);
+
+  document
+    .getElementById('calendar-back')
+    .addEventListener('click', () => {
+
+      page.remove();
+
+      container
+        .querySelectorAll('[data-calendar-hidden="true"]')
+        .forEach(el => {
+          el.style.display = '';
+          delete el.dataset.calendarHidden;
+        });
+    });
+
+  const month =
+    event.dateObj.getMonth() + 1;
+
+  const day =
+    event.dateObj.getDate();
+
+  const iframe =
+    document.createElement('iframe');
+
+  iframe.src =
+    `/saint-day?month=${month}&day=${day}`;
+
+  iframe.style.width = '100%';
+  iframe.style.height = '75vh';
+  iframe.style.border = '0';
+  iframe.style.borderRadius = '18px';
+  iframe.style.background = '#fff';
+
+  page.appendChild(iframe);
+}
     const upcoming = events
       .filter(event => event.dateObj >= now)
       .sort(
@@ -116,7 +182,11 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
       const li =
         document.createElement('li');
+li.style.cursor = 'pointer';
 
+li.addEventListener('click', () => {
+  showCalendar(event);
+});
       /*
        * Το επόμενο γεγονός
        * παίρνει τα αντίστροφα χρώματα.
