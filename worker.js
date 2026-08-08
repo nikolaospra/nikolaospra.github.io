@@ -310,7 +310,8 @@ document.getElementById("next").onclick = async () => {
 
     }
 };
-</script>
+    }
+  </script>`;
 }
 
 function escapeHtml(value) {
