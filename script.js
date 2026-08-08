@@ -89,7 +89,16 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
   .forEach(event => {
 
         const li = document.createElement('li');
+li.style.cursor = 'pointer';
 
+li.addEventListener('click', () => {
+  const month = String(event.dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(event.dateObj.getDate()).padStart(2, '0');
+
+  const url = `https://www.saint.gr/${month}/${day}/index.aspx`;
+
+  window.location.href = url;
+});
         /*
          * Αν αυτό είναι το επόμενο χρονικά γεγονός,
          * του δίνουμε την αντίστροφη εμφάνιση.
