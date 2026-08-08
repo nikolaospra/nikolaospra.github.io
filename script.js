@@ -84,8 +84,9 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
      * Δημιουργία των γεγονότων στην οθόνη.
      */
     events
-      .sort((a, b) => a.dateObj - b.dateObj)
-      .forEach(event => {
+  .filter(event => event.dateObj >= now)
+  .sort((a, b) => a.dateObj - b.dateObj)
+  .forEach(event => {
 
         const li = document.createElement('li');
 
