@@ -258,10 +258,10 @@ button.btn{font-family:inherit;cursor:pointer}
 
   position: absolute;
 
-  right: 12px;
-  bottom: -30px;
+  right: 10px;
+  bottom: -10px;
 
-  font-size: 80px;
+  font-size: 55px;
 
   color: rgba(255,255,255,0.06);
 
