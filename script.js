@@ -1,4 +1,3 @@
-alert("ΝΕΟ SCRIPT");
 fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
   .then(r => {
     if (!r.ok) throw new Error('Αδυναμία φόρτωσης ημερολογίου');
