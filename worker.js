@@ -38,7 +38,7 @@ if (request.method === "GET" && url.pathname === "/saint-day") {
 
     /*
      * Κρατάμε τα σχετικά links/images του saint.gr
-     * να δείχνουν στο saint.gr μέσα στο iframe.
+     * να δείχνουν στο  saint.gr μέσα στο iframe.
      */
     html = html.replace(
       /<head([^>]*)>/i,
