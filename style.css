@@ -268,7 +268,7 @@ button.btn{font-family:inherit;cursor:pointer}
   position: relative;
   z-index: 1;
 
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 700;
 
   margin-bottom: 5px;
@@ -278,7 +278,7 @@ button.btn{font-family:inherit;cursor:pointer}
   position: relative;
   z-index: 1;
 
-  font-size: 32px;
+  font-size: 22px;
   line-height: 1;
 
   font-weight: 800;
