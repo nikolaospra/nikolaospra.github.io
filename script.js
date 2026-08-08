@@ -58,7 +58,6 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         `${m[2].slice(0, 2)}:${m[2].slice(2, 4)}`;
 
       events.push({
-        block,
         dateObj,
         date,
         time,
@@ -76,15 +75,23 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
     const nextEvent =
       upcoming.length > 0 ? upcoming[0] : null;
 
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     /*
-     * Δημιουργία οθόνης Εορτολογίου
+     * Εορτολόγιο μέσα στην εφαρμογή
      */
     function showCalendar(event) {
       const container = document.querySelector('.container');
 
       if (!container) return;
 
-      // Κρύβουμε το πρόγραμμα
       container.querySelectorAll(':scope > *').forEach(el => {
         el.dataset.calendarHidden = 'true';
         el.style.display = 'none';
@@ -104,7 +111,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           </div>
 
           <div class="calendar-date">
-            ${event.date}
+            ${escapeHtml(event.date)}
           </div>
 
           <div class="calendar-loading">
@@ -128,22 +135,30 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             });
         });
 
-      const y = event.dateObj.getFullYear();
-      const m = event.dateObj.getMonth() + 1;
-      const d = event.dateObj.getDate();
+      const month =
+        event.dateObj.getMonth() + 1;
 
+      const day =
+        event.dateObj.getDate();
+
+      /*
+       * Ελληνικό Εορτολόγιο API
+       */
       const apiUrl =
-        `https://orthocal.info/api/gregorian/${y}/${m}/${d}/`;
+        `https://eortologio.iliasdev.com/month/${month}`;
 
       fetch(apiUrl)
         .then(response => {
           if (!response.ok) {
-            throw new Error('Αδυναμία φόρτωσης εορτολογίου');
+            throw new Error(
+              'Αδυναμία φόρτωσης ελληνικού εορτολογίου'
+            );
           }
 
           return response.json();
         })
         .then(data => {
+
           const loading =
             page.querySelector('.calendar-loading');
 
@@ -156,17 +171,53 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             'calendar-content';
 
           /*
-           * Εορτές
+           * Βρίσκουμε τη συγκεκριμένη ημέρα.
+           * Υποστηρίζουμε και αριθμητικές και string τιμές.
            */
-          if (data.feasts && data.feasts.length) {
+          const dayData =
+            Array.isArray(data)
+              ? data.find(item =>
+                  Number(item.day) === day
+                )
+              : (
+                  data.days
+                    ? data.days.find(item =>
+                        Number(item.day) === day
+                      )
+                    : null
+                );
+
+          if (!dayData) {
+            content.innerHTML = `
+              <section>
+                <p>
+                  Δεν βρέθηκαν στοιχεία εορτολογίου
+                  για τη συγκεκριμένη ημερομηνία.
+                </p>
+              </section>
+            `;
+
+            page.appendChild(content);
+            return;
+          }
+
+          /*
+           * Εορτάζουν
+           */
+          if (
+            dayData.celebrating_names &&
+            dayData.celebrating_names.length
+          ) {
             const section =
               document.createElement('section');
 
             section.innerHTML = `
-              <h2>🎉 Εορτές</h2>
+              <h2>🎉 Εορτάζουν</h2>
               <ul>
-                ${data.feasts
-                  .map(feast => `<li>${escapeHtml(feast)}</li>`)
+                ${dayData.celebrating_names
+                  .map(name =>
+                    `<li>${escapeHtml(name)}</li>`
+                  )
                   .join('')}
               </ul>
             `;
@@ -177,15 +228,20 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           /*
            * Άγιοι
            */
-          if (data.saints && data.saints.length) {
+          if (
+            dayData.saints &&
+            dayData.saints.length
+          ) {
             const section =
               document.createElement('section');
 
             section.innerHTML = `
               <h2>🕊️ Άγιοι της ημέρας</h2>
               <ul>
-                ${data.saints
-                  .map(saint => `<li>${escapeHtml(saint)}</li>`)
+                ${dayData.saints
+                  .map(saint =>
+                    `<li>${escapeHtml(saint)}</li>`
+                  )
                   .join('')}
               </ul>
             `;
@@ -194,72 +250,24 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           }
 
           /*
-           * Τίτλος ημέρας
-           */
-          if (data.summary_title) {
-            const section =
-              document.createElement('section');
-
-            section.innerHTML = `
-              <h2>📖 Η ημέρα</h2>
-              <p>${escapeHtml(data.summary_title)}</p>
-            `;
-
-            content.appendChild(section);
-          }
-
-          /*
-           * Νηστεία
+           * Άλλες πληροφορίες
            */
           if (
-            data.fast_level_desc ||
-            data.fast_exception_desc
+            dayData.other_info &&
+            dayData.other_info.length
           ) {
             const section =
               document.createElement('section');
 
-            const fastText = [
-              data.fast_level_desc,
-              data.fast_exception_desc
-            ]
-              .filter(Boolean)
-              .join(' -- ');
-
             section.innerHTML = `
-              <h2>🥖 Νηστεία</h2>
-              <p>${escapeHtml(fastText)}</p>
-            `;
-
-            content.appendChild(section);
-          }
-
-          /*
-           * Αναγνώσματα
-           */
-          if (data.readings && data.readings.length) {
-            const section =
-              document.createElement('section');
-
-            section.innerHTML = `
-              <h2>📖 Αναγνώσματα</h2>
-              ${data.readings
-                .map(reading => `
-                  <div class="reading">
-                    <strong>
-                      ${escapeHtml(
-                        reading.display || ''
-                      )}
-                    </strong>
-                    ${
-                      reading.short_display
-                        ? `<div>${escapeHtml(
-                            reading.short_display
-                          )}</div>`
-                        : ''
-                    }
-                  </div>
-                `)
-                .join('')}
+              <h2>📖 Πληροφορίες</h2>
+              <ul>
+                ${dayData.other_info
+                  .map(info =>
+                    `<li>${escapeHtml(info)}</li>`
+                  )
+                  .join('')}
+              </ul>
             `;
 
             content.appendChild(section);
@@ -269,7 +277,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             content.innerHTML = `
               <section>
                 <p>
-                  Δεν βρέθηκαν διαθέσιμα στοιχεία
+                  Δεν υπάρχουν επιπλέον πληροφορίες
                   για αυτή την ημερομηνία.
                 </p>
               </section>
@@ -292,18 +300,6 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
     }
 
     /*
-     * Ασφαλής εμφάνιση κειμένου
-     */
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    /*
      * Εμφάνιση γεγονότων
      */
     events
@@ -317,15 +313,15 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         li.style.cursor = 'pointer';
 
         /*
-         * Πάτημα στο γεγονός
-         * ανοίγει το εορτολόγιο μέσα στην εφαρμογή.
+         * Πατώντας το γεγονός ανοίγει
+         * το εορτολόγιο μέσα στην εφαρμογή.
          */
         li.addEventListener('click', () => {
           showCalendar(event);
         });
 
         /*
-         * Επισήμανση επόμενου γεγονότος
+         * Επόμενο γεγονός
          */
         if (nextEvent && event === nextEvent) {
           li.classList.add('next-event');
