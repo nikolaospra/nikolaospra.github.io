@@ -114,19 +114,22 @@ button.btn{font-family:inherit;cursor:pointer}
 .install-card ol{margin:8px 0 20px;padding-left:24px;text-align:left;line-height:1.65;color:var(--text,#2f2925)}
 .install-close{position:absolute;right:13px;top:10px;border:0;background:transparent;font-size:30px;color:#756d65;cursor:pointer}
 
+,
 .hero-image{
   display:block;
   width:100%;
-  max-width:720px;
-  height:auto;
-  margin:0 auto 22px;
-  border-radius:24px;
+  max-width:520px;
+  height:180px;
+  margin:0 auto 20px;
+  border-radius:20px;
   object-fit:cover;
-  box-shadow:0 12px 30px rgba(55,38,25,.12);
+  object-position:center;
+  box-shadow:0 10px 24px rgba(55,38,25,.10);
 }
 @media (max-width:600px){
   .hero-image{
-    border-radius:20px;
+    height:155px;
+    border-radius:18px;
     margin-bottom:18px;
   }
 }
