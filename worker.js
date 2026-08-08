@@ -106,14 +106,6 @@ return new Response(
     }
   }
 );
-      JSON.stringify(result),
-      {
-        headers: {
-          "content-type": "application/json; charset=UTF-8",
-          "cache-control": "no-store"
-        }
-      }
-    );
 
   } catch (error) {
     return new Response(
