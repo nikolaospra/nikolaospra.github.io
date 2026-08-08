@@ -5,7 +5,82 @@ export default {
     if (request.method === "GET") {
       return htmlResponse(loginPage());
     }
+if (request.method === "POST" &&
+    url.pathname === "/analyze") {
 
+  try {
+    const form = await request.formData();
+    const file = form.get("file");
+
+    if (!file || typeof file.arrayBuffer !== "function") {
+      return new Response(
+        JSON.stringify({ error: "Δεν βρέθηκε αρχείο." }),
+        {
+          status: 400,
+          headers: { "content-type": "application/json; charset=UTF-8" }
+        }
+      );
+    }
+
+    const contentType = file.type || "image/jpeg";
+    const bytes = new Uint8Array(await file.arrayBuffer());
+
+    const result = await env.AI.run(
+      "@cf/llava-hf/llava-1.5-7b-hf",
+      {
+        image: [...bytes],
+        prompt: `Διάβασε προσεκτικά αυτή τη φωτογραφία με το πρόγραμμα
+των Ιερών Ακολουθιών της ενορίας.
+
+Εξήγαγε ΟΛΕΣ τις ακολουθίες που εμφανίζονται.
+
+Για κάθε ακολουθία δώσε:
+- ημερομηνία
+- ώρα έναρξης
+- τίτλο ακολουθίας
+- ναό/τοποθεσία, αν αναφέρεται
+
+Απάντησε μόνο σε JSON της μορφής:
+
+{
+  "events": [
+    {
+      "date": "YYYY-MM-DD",
+      "time": "HH:MM",
+      "title": "Τίτλος ακολουθίας",
+      "location": "Ναός"
+    }
+  ]
+}
+
+Μην παραλείψεις καμία ακολουθία.`
+      }
+    );
+
+    return new Response(
+      JSON.stringify(result),
+      {
+        headers: {
+          "content-type": "application/json; charset=UTF-8",
+          "cache-control": "no-store"
+        }
+      }
+    );
+
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        error: error instanceof Error ? error.message : String(error)
+      }),
+      {
+        status: 500,
+        headers: {
+          "content-type": "application/json; charset=UTF-8"
+        }
+      }
+    );
+  }
+}
     if (request.method === "POST" && url.pathname === "/login") {
       const form = await request.formData();
       const password = String(form.get("password") || "");
@@ -85,11 +160,157 @@ button{padding:15px;border:0;border-radius:13px;background:#702727;color:#fff;fo
 <div class="note"><strong>Προσοχή:</strong> το ημερολόγιο δεν αλλάζει ακόμη με την επιλογή του αρχείου. Θα γίνει πρώτα έλεγχος των ημερομηνιών και των ακολουθιών.</div>
 </div></div>
 <script>
-const f=document.getElementById("file"),s=document.getElementById("status"),p=document.getElementById("preview"),i=document.getElementById("previewImg"),a=document.getElementById("actions");
-f.addEventListener("change",()=>{const x=f.files[0];if(!x)return;s.style.display="block";s.textContent="Επιλέχθηκε: "+x.name;a.style.display="flex";p.style.display="block";if(x.type.startsWith("image/")){i.src=URL.createObjectURL(x);i.style.display="block"}else{i.style.display="none"}});
-document.getElementById("clear").onclick=()=>{f.value="";p.style.display="none";a.style.display="none";s.style.display="none";i.removeAttribute("src")};
-document.getElementById("next").onclick=()=>{s.style.display="block";s.textContent="Η αυτόματη ανάλυση θα ενεργοποιηθεί στο επόμενο στάδιο."};
-</script></body></html>`;
+const f = document.getElementById("file");
+const s = document.getElementById("status");
+const p = document.getElementById("preview");
+const i = document.getElementById("previewImg");
+const a = document.getElementById("actions");
+
+f.addEventListener("change", () => {
+    const x = f.files[0];
+    if (!x) return;
+
+    s.style.display = "block";
+    s.textContent = "Επιλέχθηκε: " + x.name;
+
+    a.style.display = "flex";
+    p.style.display = "block";
+
+    if (x.type.startsWith("image/")) {
+        i.src = URL.createObjectURL(x);
+        i.style.display = "block";
+    } else {
+        i.style.display = "none";
+    }
+});
+
+document.getElementById("clear").onclick = () => {
+    f.value = "";
+    p.style.display = "none";
+    a.style.display = "none";
+    i.removeAttribute("src");
+};
+
+document.getElementById("next").onclick = async () => {
+
+    const file = f.files[0];
+
+    if (!file) {
+        s.style.display = "block";
+        s.textContent = "Παρακαλώ επίλεξε πρώτα φωτογραφία.";
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        s.style.display = "block";
+        s.textContent = "Προς το παρόν υποστηρίζονται φωτογραφίες JPG/PNG.";
+        return;
+    }
+
+    s.style.display = "block";
+    s.textContent = "⏳ Αναλύω το πρόγραμμα...";
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+
+        const response = await fetch("/analyze", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Αποτυχία ανάλυσης.");
+        }
+
+        let result = data;
+
+        // Το Workers AI μπορεί να επιστρέψει το αποτέλεσμα
+        // μέσα στο πεδίο response ως JSON κείμενο.
+        if (data && typeof data.response === "string") {
+
+            let text = data.response
+                .replace(/```json/gi, "")
+                .replace(/```/g, "")
+                .trim();
+
+            try {
+                result = JSON.parse(text);
+            } catch {
+                result = {
+                    response: text
+                };
+            }
+        }
+
+        s.textContent = "✅ Η ανάλυση ολοκληρώθηκε.";
+
+        const old = document.getElementById("analysisResult");
+        if (old) old.remove();
+
+        const box = document.createElement("div");
+        box.id = "analysisResult";
+
+        box.style.marginTop = "20px";
+        box.style.padding = "18px";
+        box.style.background = "#f5f1ec";
+        box.style.borderRadius = "14px";
+        box.style.whiteSpace = "pre-wrap";
+        box.style.lineHeight = "1.6";
+        box.style.color = "#4b2020";
+
+        if (result.events && Array.isArray(result.events)) {
+
+            const title = document.createElement("h2");
+            title.textContent = "📅 Ακολουθίες που βρέθηκαν";
+            box.appendChild(title);
+
+            result.events.forEach(event => {
+
+                const item = document.createElement("div");
+
+                item.style.padding = "12px 0";
+                item.style.borderBottom = "1px solid #ddd";
+
+                item.innerHTML =
+                    "<strong>" +
+                    (event.date || "") +
+                    " " +
+                    (event.time || "") +
+                    "</strong><br>" +
+                    (event.title || "") +
+                    (event.location
+                        ? "<br>📍 " + event.location
+                        : "");
+
+                box.appendChild(item);
+            });
+
+        } else {
+
+            box.textContent =
+                typeof result === "string"
+                    ? result
+                    : JSON.stringify(result, null, 2);
+        }
+
+        document.querySelector(".card").appendChild(box);
+
+    } catch (error) {
+
+        console.error(error);
+
+        s.style.display = "block";
+        s.textContent =
+            "❌ Σφάλμα ανάλυσης: " +
+            (error.message || error);
+
+    }
+};
+</script>
 }
 
 function escapeHtml(value) {
