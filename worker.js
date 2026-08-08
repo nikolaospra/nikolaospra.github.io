@@ -154,9 +154,15 @@ button{padding:15px;border:0;border-radius:13px;background:#702727;color:#fff;fo
 <span>Επίλεξε το αρχείο του προγράμματος</span>
 <input id="file" type="file" accept="image/*,.pdf,application/pdf"></div>
 <div id="status" class="status"></div>
-<div id="preview" class="preview"><img id="previewImg" alt="Προεπισκόπηση">
-<div class="actions" id="actions"><button class="secondary" id="clear" type="button">Αφαίρεση</button>
-<button id="next" type="button">Ανάλυση προγράμματος</button></div></div>
+<div id="preview" class="preview" style="display:block">
+<img id="previewImg" alt="Προεπισκόπηση">
+
+<div class="actions" id="actions" style="display:flex">
+<button class="secondary" id="clear" type="button">Αφαίρεση</button>
+<button id="next" type="button">Ανάλυση προγράμματος</button>
+</div>
+
+</div>
 <div class="note"><strong>Προσοχή:</strong> το ημερολόγιο δεν αλλάζει ακόμη με την επιλογή του αρχείου. Θα γίνει πρώτα έλεγχος των ημερομηνιών και των ακολουθιών.</div>
 </div></div>
 <script>
