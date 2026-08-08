@@ -250,24 +250,6 @@ button.btn{font-family:inherit;cursor:pointer}
   box-shadow:
     0 14px 32px rgba(70, 25, 25, 0.22);
 }
-
-/* διακριτικός σταυρός στο φόντο */
-
-.next-event-card::after {
-  content: "✝";
-
-  position: absolute;
-
-  right: 10px;
-  bottom: -10px;
-
-  font-size: 55px;
-
-  color: rgba(255,255,255,0.06);
-
-  pointer-events: none;
-}
-
 .next-card-label {
   position: relative;
   z-index: 1;
