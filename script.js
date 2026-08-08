@@ -221,7 +221,7 @@ if (nextEventCard && nextEvent) {
 
   nextEventCard.innerHTML = `
     <div class="next-card-label">
-      ⭐ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
+      ⛪️ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
     </div>
 
     <div class="next-card-date">
