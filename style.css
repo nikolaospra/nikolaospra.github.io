@@ -113,17 +113,21 @@ button.btn{font-family:inherit;cursor:pointer}
 .install-card p{margin:8px 0;text-align:left;color:var(--text,#2f2925)}
 .install-card ol{margin:8px 0 20px;padding-left:24px;text-align:left;line-height:1.65;color:var(--text,#2f2925)}
 .install-close{position:absolute;right:13px;top:10px;border:0;background:transparent;font-size:30px;color:#756d65;cursor:pointer}
-.next-event {
-  background: #5a2525;
-  color: #ffffff;
-  border-radius: 12px;
-  padding: 14px 16px;
+#events li.next-event {
+  background: var(--burgundy) !important;
+  color: #fff !important;
+  border-color: var(--burgundy-dark);
+  box-shadow: 0 8px 22px rgba(66,20,25,.22);
 }
 
-.next-event strong {
-  color: #ffffff;
+#events li.next-event:before {
+  background: var(--gold);
 }
 
-.next-event small {
-  color: #ffffff;
+#events li.next-event strong {
+  color: #fff !important;
+}
+
+#events li.next-event small {
+  color: rgba(255,255,255,.9) !important;
 }
