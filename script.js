@@ -7,7 +7,8 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
     const list = document.getElementById('events');
     list.innerHTML = '';
 
-    const blocks = ics.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
+    const blocks =
+      ics.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
 
     const events = [];
 
@@ -66,63 +67,293 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       });
     });
 
-    /*
-     * Βρίσκουμε το επόμενο γεγονός.
-     * Είναι το πρώτο γεγονός που δεν έχει περάσει.
-     */
     const now = new Date();
 
     const upcoming = events
       .filter(event => event.dateObj >= now)
       .sort((a, b) => a.dateObj - b.dateObj);
 
-    const nextEvent = upcoming.length > 0
-      ? upcoming[0]
-      : null;
+    const nextEvent =
+      upcoming.length > 0 ? upcoming[0] : null;
 
     /*
-     * Δημιουργία των γεγονότων στην οθόνη.
+     * Δημιουργία οθόνης Εορτολογίου
+     */
+    function showCalendar(event) {
+      const container = document.querySelector('.container');
+
+      if (!container) return;
+
+      // Κρύβουμε το πρόγραμμα
+      container.querySelectorAll(':scope > *').forEach(el => {
+        el.dataset.calendarHidden = 'true';
+        el.style.display = 'none';
+      });
+
+      const page = document.createElement('div');
+      page.id = 'orthodox-calendar-page';
+
+      page.innerHTML = `
+        <div class="calendar-header">
+          <button id="calendar-back" class="calendar-back">
+            ← Επιστροφή στο πρόγραμμα
+          </button>
+
+          <div class="calendar-title">
+            ✝️ Εορτολόγιο
+          </div>
+
+          <div class="calendar-date">
+            ${event.date}
+          </div>
+
+          <div class="calendar-loading">
+            Φόρτωση εορτολογίου…
+          </div>
+        </div>
+      `;
+
+      container.appendChild(page);
+
+      document
+        .getElementById('calendar-back')
+        .addEventListener('click', () => {
+          page.remove();
+
+          container
+            .querySelectorAll('[data-calendar-hidden="true"]')
+            .forEach(el => {
+              el.style.display = '';
+              delete el.dataset.calendarHidden;
+            });
+        });
+
+      const y = event.dateObj.getFullYear();
+      const m = event.dateObj.getMonth() + 1;
+      const d = event.dateObj.getDate();
+
+      const apiUrl =
+        `https://orthocal.info/api/gregorian/${y}/${m}/${d}/`;
+
+      fetch(apiUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Αδυναμία φόρτωσης εορτολογίου');
+          }
+
+          return response.json();
+        })
+        .then(data => {
+          const loading =
+            page.querySelector('.calendar-loading');
+
+          if (loading) loading.remove();
+
+          const content =
+            document.createElement('div');
+
+          content.className =
+            'calendar-content';
+
+          /*
+           * Εορτές
+           */
+          if (data.feasts && data.feasts.length) {
+            const section =
+              document.createElement('section');
+
+            section.innerHTML = `
+              <h2>🎉 Εορτές</h2>
+              <ul>
+                ${data.feasts
+                  .map(feast => `<li>${escapeHtml(feast)}</li>`)
+                  .join('')}
+              </ul>
+            `;
+
+            content.appendChild(section);
+          }
+
+          /*
+           * Άγιοι
+           */
+          if (data.saints && data.saints.length) {
+            const section =
+              document.createElement('section');
+
+            section.innerHTML = `
+              <h2>🕊️ Άγιοι της ημέρας</h2>
+              <ul>
+                ${data.saints
+                  .map(saint => `<li>${escapeHtml(saint)}</li>`)
+                  .join('')}
+              </ul>
+            `;
+
+            content.appendChild(section);
+          }
+
+          /*
+           * Τίτλος ημέρας
+           */
+          if (data.summary_title) {
+            const section =
+              document.createElement('section');
+
+            section.innerHTML = `
+              <h2>📖 Η ημέρα</h2>
+              <p>${escapeHtml(data.summary_title)}</p>
+            `;
+
+            content.appendChild(section);
+          }
+
+          /*
+           * Νηστεία
+           */
+          if (
+            data.fast_level_desc ||
+            data.fast_exception_desc
+          ) {
+            const section =
+              document.createElement('section');
+
+            const fastText = [
+              data.fast_level_desc,
+              data.fast_exception_desc
+            ]
+              .filter(Boolean)
+              .join(' -- ');
+
+            section.innerHTML = `
+              <h2>🥖 Νηστεία</h2>
+              <p>${escapeHtml(fastText)}</p>
+            `;
+
+            content.appendChild(section);
+          }
+
+          /*
+           * Αναγνώσματα
+           */
+          if (data.readings && data.readings.length) {
+            const section =
+              document.createElement('section');
+
+            section.innerHTML = `
+              <h2>📖 Αναγνώσματα</h2>
+              ${data.readings
+                .map(reading => `
+                  <div class="reading">
+                    <strong>
+                      ${escapeHtml(
+                        reading.display || ''
+                      )}
+                    </strong>
+                    ${
+                      reading.short_display
+                        ? `<div>${escapeHtml(
+                            reading.short_display
+                          )}</div>`
+                        : ''
+                    }
+                  </div>
+                `)
+                .join('')}
+            `;
+
+            content.appendChild(section);
+          }
+
+          if (!content.children.length) {
+            content.innerHTML = `
+              <section>
+                <p>
+                  Δεν βρέθηκαν διαθέσιμα στοιχεία
+                  για αυτή την ημερομηνία.
+                </p>
+              </section>
+            `;
+          }
+
+          page.appendChild(content);
+        })
+        .catch(error => {
+          console.error(error);
+
+          const loading =
+            page.querySelector('.calendar-loading');
+
+          if (loading) {
+            loading.textContent =
+              'Δεν ήταν δυνατή η φόρτωση του εορτολογίου.';
+          }
+        });
+    }
+
+    /*
+     * Ασφαλής εμφάνιση κειμένου
+     */
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /*
+     * Εμφάνιση γεγονότων
      */
     events
-  .filter(event => event.dateObj >= now)
-  .sort((a, b) => a.dateObj - b.dateObj)
-  .forEach(event => {
+      .filter(event => event.dateObj >= now)
+      .sort((a, b) => a.dateObj - b.dateObj)
+      .forEach(event => {
 
-        const li = document.createElement('li');
-li.style.cursor = 'pointer';
+        const li =
+          document.createElement('li');
 
-li.onclick = function () {
-  const month = String(event.dateObj.getMonth() + 1).padStart(2, '0');
-  const day = String(event.dateObj.getDate()).padStart(2, '0');
+        li.style.cursor = 'pointer';
 
-  window.location.assign(
-    `https://www.saint.gr/${month}/${day}/index.aspx`
-  );
         /*
-         * Αν αυτό είναι το επόμενο χρονικά γεγονός,
-         * του δίνουμε την αντίστροφη εμφάνιση.
+         * Πάτημα στο γεγονός
+         * ανοίγει το εορτολόγιο μέσα στην εφαρμογή.
+         */
+        li.addEventListener('click', () => {
+          showCalendar(event);
+        });
+
+        /*
+         * Επισήμανση επόμενου γεγονότος
          */
         if (nextEvent && event === nextEvent) {
           li.classList.add('next-event');
         }
 
-        const strong = document.createElement('strong');
+        const strong =
+          document.createElement('strong');
 
         strong.textContent =
           `${event.date} · ${event.time}`;
 
         li.appendChild(strong);
 
-        li.appendChild(document.createElement('br'));
+        li.appendChild(
+          document.createElement('br')
+        );
 
         li.appendChild(
           document.createTextNode(event.summary)
         );
 
         if (event.location) {
-          li.appendChild(document.createElement('br'));
+          li.appendChild(
+            document.createElement('br')
+          );
 
-          const small = document.createElement('small');
+          const small =
+            document.createElement('small');
 
           small.textContent =
             `📍 ${event.location}`;
@@ -134,8 +365,7 @@ li.onclick = function () {
       });
 
     /*
-     * Ελέγχουμε κάθε λεπτό αν πέρασε το τρέχον γεγονός.
-     * Έτσι το επόμενο παίρνει αυτόματα την επισήμανση.
+     * Έλεγχος κάθε λεπτό
      */
     setInterval(() => {
       location.reload();
