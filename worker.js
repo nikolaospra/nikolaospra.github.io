@@ -414,4 +414,5 @@ document.getElementById("next").onclick = async function () {
             (error.message || error);
     }
 };
-</script>
+</script>`;
+}
