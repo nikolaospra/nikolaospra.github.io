@@ -135,24 +135,20 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             });
         });
 
-      const month =
-        event.dateObj.getMonth() + 1;
+     const month = event.dateObj.getMonth() + 1;
+const day = event.dateObj.getDate();
 
-      const day =
-        event.dateObj.getDate();
+const iframe = document.createElement('iframe');
 
-      /*
-       * Ελληνικό Εορτολόγιο API
-       */
-      const apiUrl =
-        `https://eortologio.iliasdev.com/month/${month}`;
+iframe.src = `/saint-day?month=${month}&day=${day}`;
 
-      fetch(apiUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(
-              'Αδυναμία φόρτωσης ελληνικού εορτολογίου'
-            );
+iframe.style.width = '100%';
+iframe.style.height = '75vh';
+iframe.style.border = '0';
+iframe.style.borderRadius = '18px';
+iframe.style.background = '#fff';
+
+page.appendChild(iframe);
           }
 
           return response.json();
