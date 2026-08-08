@@ -197,7 +197,7 @@ document.getElementById("next").onclick = async () => {
 
     if (!file) {
         s.style.display = "block";
-        s.textContent = "Παρακαλώ επίλεξε πρώτα φωτογραφία.";
+        s.textContent = "Παρακαλώ  επίλεξε πρώτα φωτογραφία.";
         return;
     }
 
