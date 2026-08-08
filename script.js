@@ -1,10 +1,17 @@
 fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
   .then(r => {
-    if (!r.ok) throw new Error('Αδυναμία φόρτωσης ημερολογίου');
+    if (!r.ok) {
+      throw new Error('Αδυναμία φόρτωσης ημερολογίου');
+    }
     return r.text();
   })
   .then(ics => {
     const list = document.getElementById('events');
+
+    if (!list) {
+      throw new Error('Δεν βρέθηκε το στοιχείο events.');
+    }
+
     list.innerHTML = '';
 
     const blocks =
@@ -13,23 +20,38 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
     const events = [];
 
     blocks.forEach(block => {
+
       const get = name => {
         const m = block.match(
-          new RegExp('^' + name + '(?:;[^:]*)?:(.*)$', 'm')
+          new RegExp(
+            '^' + name + '(?:;[^:]*)?:(.*)$',
+            'm'
+          )
         );
+
         return m ? m[1].trim() : '';
       };
 
       const dt = get('DTSTART');
+
       const m = dt.match(/(\d{8})T(\d{4})/);
 
       if (!m) return;
 
-      const year = Number(m[1].slice(0, 4));
-      const month = Number(m[1].slice(4, 6)) - 1;
-      const day = Number(m[1].slice(6, 8));
-      const hour = Number(m[2].slice(0, 2));
-      const minute = Number(m[2].slice(2, 4));
+      const year =
+        Number(m[1].slice(0, 4));
+
+      const month =
+        Number(m[1].slice(4, 6)) - 1;
+
+      const day =
+        Number(m[1].slice(6, 8));
+
+      const hour =
+        Number(m[2].slice(0, 2));
+
+      const minute =
+        Number(m[2].slice(2, 4));
 
       const dateObj = new Date(
         year,
@@ -49,7 +71,8 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         'Σάββατο'
       ];
 
-      const weekday = weekdays[dateObj.getDay()];
+      const weekday =
+        weekdays[dateObj.getDay()];
 
       const date =
         `${weekday} ${m[1].slice(6, 8)}/${m[1].slice(4, 6)}/${m[1].slice(0, 4)}`;
@@ -68,64 +91,103 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
     const now = new Date();
 
+    /*
+     * Κρατάμε μόνο τα μελλοντικά γεγονότα.
+     */
     const upcoming = events
       .filter(event => event.dateObj >= now)
-      .sort((a, b) => a.dateObj - b.dateObj);
+      .sort(
+        (a, b) =>
+          a.dateObj - b.dateObj
+      );
 
+    /*
+     * Το πρώτο είναι το επόμενο γεγονός.
+     */
     const nextEvent =
-      upcoming.length > 0 ? upcoming[0] : null;
+      upcoming.length > 0
+        ? upcoming[0]
+        : null;
 
-    events
-      .filter(event => event.dateObj >= now)
-      .sort((a, b) => a.dateObj - b.dateObj)
-      .forEach(event => {
+    /*
+     * Εμφάνιση γεγονότων.
+     */
+    upcoming.forEach(event => {
 
-        const li = document.createElement('li');
+      const li =
+        document.createElement('li');
 
-        if (nextEvent && event === nextEvent) {
-          li.classList.add('next-event');
-        }
+      /*
+       * Το επόμενο γεγονός
+       * παίρνει τα αντίστροφα χρώματα.
+       */
+      if (
+        nextEvent &&
+        event === nextEvent
+      ) {
+        li.classList.add('next-event');
+      }
 
-        const strong = document.createElement('strong');
+      const strong =
+        document.createElement('strong');
 
-        strong.textContent =
-          `${event.date} · ${event.time}`;
+      strong.textContent =
+        `${event.date} · ${event.time}`;
 
-        li.appendChild(strong);
+      li.appendChild(strong);
+
+      li.appendChild(
+        document.createElement('br')
+      );
+
+      li.appendChild(
+        document.createTextNode(
+          event.summary
+        )
+      );
+
+      if (event.location) {
 
         li.appendChild(
           document.createElement('br')
         );
 
-        li.appendChild(
-          document.createTextNode(event.summary)
-        );
+        const small =
+          document.createElement('small');
 
-        if (event.location) {
-          li.appendChild(
-            document.createElement('br')
-          );
+        small.textContent =
+          `📍 ${event.location}`;
 
-          const small =
-            document.createElement('small');
+        li.appendChild(small);
+      }
 
-          small.textContent =
-            `📍 ${event.location}`;
+      list.appendChild(li);
+    });
 
-          li.appendChild(small);
-        }
-
-        list.appendChild(li);
-      });
-
+    /*
+     * Κάθε λεπτό ξαναφορτώνουμε το ημερολόγιο.
+     *
+     * Έτσι όταν περάσει η ώρα ενός γεγονότος:
+     * - εξαφανίζεται
+     * - το επόμενο γίνεται αυτόματα next-event
+     */
     setInterval(() => {
       location.reload();
     }, 60000);
 
   })
   .catch(err => {
-    document.getElementById('events').textContent =
-      'Δεν ήταν δυνατή η φόρτωση του προγράμματος.';
 
-    console.error(err);
+    const list =
+      document.getElementById('events');
+
+    if (list) {
+      list.textContent =
+        'Δεν ήταν δυνατή η φόρτωση του προγράμματος.';
+    }
+
+    console.error(
+      'CALENDAR ERROR:',
+      err
+    );
   });
