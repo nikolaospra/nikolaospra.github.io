@@ -114,20 +114,20 @@ button.btn{font-family:inherit;cursor:pointer}
 .install-card ol{margin:8px 0 20px;padding-left:24px;text-align:left;line-height:1.65;color:var(--text,#2f2925)}
 .install-close{position:absolute;right:13px;top:10px;border:0;background:transparent;font-size:30px;color:#756d65;cursor:pointer}
 #events li.next-event {
-  background: var(--burgundy) !important;
-  color: #fff !important;
-  border-color: var(--burgundy-dark);
+  background: #641f24 !important;
+  color: #ffffff !important;
+  border: 1px solid #421419 !important;
   box-shadow: 0 8px 22px rgba(66,20,25,.22);
 }
 
 #events li.next-event:before {
-  background: var(--gold);
+  background: #b99752 !important;
 }
 
 #events li.next-event strong {
-  color: #fff !important;
+  color: #ffffff !important;
 }
 
 #events li.next-event small {
-  color: rgba(255,255,255,.9) !important;
+  color: #ffffff !important;
 }
