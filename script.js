@@ -286,17 +286,17 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
           page.appendChild(content);
         })
-        .catch(error => {
-          console.error(error);
+       .catch(error => {
+  console.error('ΕΟΡΤΟΛΟΓΙΟ ERROR:', error);
 
-          const loading =
-            page.querySelector('.calendar-loading');
+  const loading =
+    page.querySelector('.calendar-loading');
 
-          if (loading) {
-            loading.textContent =
-              'Δεν ήταν δυνατή η φόρτωση του εορτολογίου.';
-          }
-        });
+  if (loading) {
+    loading.textContent =
+      'Σφάλμα: ' + error.message;
+  }
+});
     }
 
     /*
