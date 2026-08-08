@@ -144,7 +144,7 @@ h1{font-size:28px;margin:0 0 7px}.lead{color:#777;margin:0 0 25px;line-height:1.
 .upload .emoji{font-size:42px;margin-bottom:8px}.upload strong{display:block;font-size:19px}.upload span{display:block;color:#777;margin:7px 0 18px}
 input[type=file]{width:100%;font-size:16px}.status{display:none;margin-top:18px;padding:14px;border-radius:13px;background:#f4eee9;color:#555}
 .preview{display:none;margin-top:20px}.preview img{max-width:100%;max-height:420px;border-radius:14px;display:block;margin:auto}
-.actions{display:none;gap:10px;margin-top:16px}.actions button{flex:1}.actions .secondary{background:#eee5e0;color:#4b2020}
+.actions{display:flex;gap:10px;margin-top:16px}.actions button{flex:1}.actions .secondary{background:#eee5e0;color:#4b2020}
 button{padding:15px;border:0;border-radius:13px;background:#702727;color:#fff;font-size:16px;font-weight:700}
 .note{margin-top:20px;padding:15px;border-radius:14px;background:#f5f1ec;color:#666;line-height:1.5}
 </style></head><body><div class="wrap"><div class="card">
