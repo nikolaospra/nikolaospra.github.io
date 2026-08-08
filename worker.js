@@ -233,9 +233,9 @@ document.getElementById("next").onclick = async () => {
         if (data && typeof data.response === "string") {
 
             let text = data.response
-                .replace(/```json/gi, "")
-                .replace(/```/g, "")
-                .trim();
+    .replace(new RegExp(String.fromCharCode(96) + "{3}json", "gi"), "")
+    .replace(new RegExp(String.fromCharCode(96) + "{3}", "g"), "")
+    .trim();
 
             try {
                 result = JSON.parse(text);
