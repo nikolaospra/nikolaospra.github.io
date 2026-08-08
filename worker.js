@@ -25,11 +25,11 @@ if (request.method === "POST" &&
     const contentType = file.type || "image/jpeg";
     const bytes = new Uint8Array(await file.arrayBuffer());
 
-    const result = await env.AI.run(
-      "@cf/llava-hf/llava-1.5-7b-hf",
-      {
-        image: [...bytes],
-        prompt: `Διάβασε προσεκτικά αυτή τη φωτογραφία με το πρόγραμμα
+    const aiResult = await env.AI.run(
+  "@cf/llava-hf/llava-1.5-7b-hf",
+  {
+    image: [...bytes],
+    prompt: `Διάβασε προσεκτικά αυτή τη φωτογραφία με το πρόγραμμα
 των Ιερών Ακολουθιών της ενορίας.
 
 Εξήγαγε ΟΛΕΣ τις ακολουθίες που εμφανίζονται.
@@ -40,7 +40,12 @@ if (request.method === "POST" &&
 - τίτλο ακολουθίας
 - ναό/τοποθεσία, αν αναφέρεται
 
-Απάντησε μόνο σε JSON της μορφής:
+Απάντησε ΜΟΝΟ με έγκυρο JSON.
+Μην γράψεις markdown.
+Μην γράψεις \`\`\`json.
+Μην γράψεις κανένα άλλο κείμενο.
+
+Η ακριβής μορφή πρέπει να είναι:
 
 {
   "events": [
@@ -54,10 +59,53 @@ if (request.method === "POST" &&
 }
 
 Μην παραλείψεις καμία ακολουθία.`
-      }
-    );
+  }
+);
 
-    return new Response(
+let text = "";
+
+if (aiResult && typeof aiResult.response === "string") {
+  text = aiResult.response;
+} else if (typeof aiResult === "string") {
+  text = aiResult;
+} else {
+  text = JSON.stringify(aiResult);
+}
+
+// Αφαίρεση markdown/code fences
+text = text
+  .replace(/```json/gi, "")
+  .replace(/```/g, "")
+  .trim();
+
+// Βρες το πραγματικό JSON μέσα στην απάντηση
+const start = text.indexOf("{");
+const end = text.lastIndexOf("}");
+
+if (start !== -1 && end !== -1 && end > start) {
+  text = text.slice(start, end + 1);
+}
+
+let parsed;
+
+try {
+  parsed = JSON.parse(text);
+} catch (e) {
+  parsed = {
+    events: [],
+    response: text
+  };
+}
+
+return new Response(
+  JSON.stringify(parsed),
+  {
+    headers: {
+      "content-type": "application/json; charset=UTF-8",
+      "cache-control": "no-store"
+    }
+  }
+);
       JSON.stringify(result),
       {
         headers: {
