@@ -141,3 +141,14 @@ button.btn{font-family:inherit;cursor:pointer}
     border-radius:16px;
   }
 }
+.hero-image {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: 155px;
+  margin: 0 auto 22px auto;
+  object-fit: contain;
+  object-position: center center;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(55, 38, 25, 0.10);
+}
