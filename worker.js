@@ -166,17 +166,20 @@ const p = document.getElementById("preview");
 const i = document.getElementById("previewImg");
 const a = document.getElementById("actions");
 
-f.addEventListener("change", () => {
-    const x = f.files[0];
-    if (!x) return;
+f.addEventListener("change", function () {
+    const x = f.files && f.files[0];
+
+    if (!x) {
+        return;
+    }
 
     s.style.display = "block";
     s.textContent = "Επιλέχθηκε: " + x.name;
 
-    a.style.display = "flex";
     p.style.display = "block";
+    a.style.display = "flex";
 
-    if (x.type.startsWith("image/")) {
+    if (x.type && x.type.startsWith("image/")) {
         i.src = URL.createObjectURL(x);
         i.style.display = "block";
     } else {
@@ -184,14 +187,121 @@ f.addEventListener("change", () => {
     }
 });
 
-document.getElementById("clear").onclick = () => {
+document.getElementById("clear").onclick = function () {
     f.value = "";
+    s.style.display = "none";
     p.style.display = "none";
     a.style.display = "none";
     i.removeAttribute("src");
 };
 
-document.getElementById("next").onclick = async () => {
+document.getElementById("next").onclick = async function () {
+    const file = f.files && f.files[0];
+
+    if (!file) {
+        s.style.display = "block";
+        s.textContent = "Παρακαλώ επίλεξε πρώτα φωτογραφία.";
+        return;
+    }
+
+    if (!file.type || !file.type.startsWith("image/")) {
+        s.style.display = "block";
+        s.textContent = "Προς το παρόν υποστηρίζονται φωτογραφίες JPG/PNG.";
+        return;
+    }
+
+    s.style.display = "block";
+    s.textContent = "⏳ Αναλύω το πρόγραμμα...";
+    
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch("/analyze", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Αποτυχία ανάλυσης.");
+        }
+
+        let result = data;
+
+        if (data && typeof data.response === "string") {
+            let text = data.response
+                .replace(/```json/gi, "")
+                .replace(/```/g, "")
+                .trim();
+
+            try {
+                result = JSON.parse(text);
+            } catch {
+                result = { response: text };
+            }
+        }
+
+        s.textContent = "✅ Η ανάλυση ολοκληρώθηκε.";
+
+        const old = document.getElementById("analysisResult");
+        if (old) old.remove();
+
+        const box = document.createElement("div");
+        box.id = "analysisResult";
+
+        box.style.marginTop = "20px";
+        box.style.padding = "18px";
+        box.style.background = "#f5f1ec";
+        box.style.borderRadius = "14px";
+        box.style.whiteSpace = "pre-wrap";
+        box.style.lineHeight = "1.6";
+        box.style.color = "#4b2020";
+
+        if (result.events && Array.isArray(result.events)) {
+            const title = document.createElement("h2");
+            title.textContent = "📅 Ακολουθίες που βρέθηκαν";
+            box.appendChild(title);
+
+            result.events.forEach(event => {
+                const item = document.createElement("div");
+
+                item.style.padding = "12px 0";
+                item.style.borderBottom = "1px solid #ddd";
+
+                item.innerHTML =
+                    "<strong>" +
+                    (event.date || "") +
+                    " " +
+                    (event.time || "") +
+                    "</strong><br>" +
+                    (event.title || "") +
+                    (event.location
+                        ? "<br>📍 " + event.location
+                        : "");
+
+                box.appendChild(item);
+            });
+        } else {
+            box.textContent =
+                typeof result === "string"
+                    ? result
+                    : JSON.stringify(result, null, 2);
+        }
+
+        document.querySelector(".card").appendChild(box);
+
+    } catch (error) {
+        console.error(error);
+
+        s.style.display = "block";
+        s.textContent =
+            "❌ Σφάλμα ανάλυσης: " +
+            (error.message || error);
+    }
+};
+</script>
 
     const file = f.files[0];
 
