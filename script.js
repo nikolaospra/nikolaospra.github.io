@@ -528,15 +528,14 @@ if (mEnd) {
         nextEvent.location
       ) {
 
-        /* const mapsUrl =
+        const mapsUrl =
           `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(nextEvent.location)}`;
 
         locationHtml = `
           <div class="next-card-location">
             <a
               href="${mapsUrl}"
-              target="_blank" */
-              
+              target="_blank"
               rel="noopener"
               style="
                 color:inherit;
@@ -759,7 +758,8 @@ if (mEnd) {
 
             window.open(
               mapsUrl,
-              '_blank'
+              '_blank' 
+              
             );
           }
         );
