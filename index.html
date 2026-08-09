@@ -31,7 +31,17 @@ OneSignalDeferred.push(async function(OneSignal) {
   <img src="church.jpg" alt="Ιερός Ναός Παναγίας Ακαθίστου Ύμνου Οίας">
 </div><h1>Πρόγραμμα ιερών ακολουθιών ιερού ενοριακού ναού Παναγίας Ακαθίστου Ύμνου Οίας "Παναγία Πλατσανή"</h1>
 <div id="nextEventCard" class="next-event-card"></div>
-<p><a class='btn' href='calendar.ics'>📅 Προσθήκη στο Ημερολόγιο</a><button id="installBtn" class="btn secondary" type="button" onclick="document.getElementById('installHelp').hidden=false">📱 Προσθήκη στην Αφετηρία</button></p><ul id='events'></ul>
+<p><a class='btn' href='calendar.ics'>📅 Προσθήκη στο Ημερολόγιο</a><button id="installBtn" class="btn secondary" type="button" onclick="document.getElementById('installHelp').hidden=false">📱 Προσθήκη στην Αφετηρία</button>
+<div class="radio-player">
+  <iframe
+    src="https://volticast.com/embed/radiofloga"
+    height="120"
+    frameborder="0"
+    scrolling="no"
+    allow="autoplay">
+  </iframe>
+</div>
+</p><ul id='events'></ul>
 <div id="installHelp" class="install-help" hidden>
   <div class="install-card" role="dialog" aria-modal="true" aria-labelledby="installTitle">
     <button id="closeInstall" class="install-close" type="button" aria-label="Κλείσιμο" onclick="document.getElementById('installHelp').setAttribute('hidden','')">×</button>

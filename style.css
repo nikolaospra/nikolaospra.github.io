@@ -343,3 +343,19 @@ button.btn{font-family:inherit;cursor:pointer}
   margin: 0 auto;
   border-radius: 18px;
 }
+.radio-player {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 15px auto 20px;
+  overflow: hidden;
+  border-radius: 13px;
+}
+
+.radio-player iframe {
+  width: 100%;
+  width: 100px;
+  height: 120px;
+  border: 0;
+  border-radius: 16px;
+}
