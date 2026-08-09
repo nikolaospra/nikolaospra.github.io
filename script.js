@@ -173,6 +173,13 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       const time =
         `${m[2].slice(0, 2)}:` +
         `${m[2].slice(2, 4)}`;
+        let endTime = '';
+
+if (mEnd) {
+  endTime =
+    `${mEnd[2].slice(0, 2)}:` +
+    `${mEnd[2].slice(2, 4)}`;
+}
 
       /*
        * =========================
@@ -189,7 +196,8 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         date,
 
         time,
-
+         
+        endTime, 
         summary:
           get('SUMMARY'),
 
@@ -558,10 +566,13 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         </div>
 
         <div class="next-card-time">
-          ${escapeHtml(
-            nextEvent.time
-          )}
-        </div>
+  ${escapeHtml(nextEvent.time)}
+  ${
+    nextEvent.endTime
+      ? ` – ${escapeHtml(nextEvent.endTime)}`
+      : ''
+  }
+</div>
 
         <div class="next-card-title">
           ${escapeHtml(
