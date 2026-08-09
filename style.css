@@ -345,17 +345,15 @@ button.btn{font-family:inherit;cursor:pointer}
 }
 .radio-player {
   width: 100%;
-  margin: 15px 0 20px;
-  overflow: hidden;
-  border-radius: 13px;
+  display: flex;
+  justify-content: center;
+  margin: 15px auto 20px;
 }
 
 .radio-player iframe {
-  display: block;
-  width: 100% !important;
-  max-width: none !important;
-  min-width: 100% !important;
+  width: 100%;
+  max-width: 400px;
   height: 120px;
   border: 0;
-  border-radius: 13px;
+  border-radius: 16px;
 }
