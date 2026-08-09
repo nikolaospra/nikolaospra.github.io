@@ -330,3 +330,16 @@ button.btn{font-family:inherit;cursor:pointer}
   display: none !important;
   content: none !important;
 }
+.church-image {
+  text-align: center;
+  margin: 10px auto 20px;
+}
+
+.church-image img {
+  display: block;
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 18px;
+}
