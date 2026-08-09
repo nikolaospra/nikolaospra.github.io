@@ -18,8 +18,6 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       );
     }
 
-    list.innerHTML = '';
-
     const blocks =
       ics.match(
         /BEGIN:VEVENT[\s\S]*?END:VEVENT/g
@@ -116,6 +114,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
        */
 
       let endObj = null;
+      let endTime = '';
 
       if (mEnd) {
 
@@ -141,6 +140,10 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
               mEnd[2].slice(2, 4)
             )
           );
+
+        endTime =
+          `${mEnd[2].slice(0, 2)}:` +
+          `${mEnd[2].slice(2, 4)}`;
       }
 
       /*
@@ -174,20 +177,6 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         `${m[2].slice(0, 2)}:` +
         `${m[2].slice(2, 4)}`;
 
-      let endTime = '';
-
-      if (mEnd) {
-        endTime =
-          `${mEnd[2].slice(0, 2)}:` +
-          `${mEnd[2].slice(2, 4)}`;
-      }
-
-      /*
-       * =========================
-       * ΑΠΟΘΗΚΕΥΣΗ
-       * =========================
-       */
-
       events.push({
 
         dateObj,
@@ -207,51 +196,6 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           get('LOCATION')
       });
     });
-
-    /*
-     * =========================
-     * ΤΩΡΑ
-     * =========================
-     */
-
-    const now =
-      new Date();
-
-    /*
-     * =========================
-     * ΕΝΕΡΓΕΣ / ΕΠΟΜΕΝΕΣ
-     *
-     * Μια ακολουθία παραμένει
-     * μέχρι το DTEND.
-     * =========================
-     */
-
-    const upcoming =
-      events
-        .filter(event => {
-
-          if (event.endObj) {
-            return event.endObj > now;
-          }
-
-          return event.dateObj >= now;
-        })
-
-        .sort(
-          (a, b) =>
-            a.dateObj - b.dateObj
-        );
-
-    /*
-     * =========================
-     * ΕΠΟΜΕΝΗ / ΤΡΕΧΟΥΣΑ
-     * =========================
-     */
-
-    const nextEvent =
-      upcoming.length > 0
-        ? upcoming[0]
-        : null;
 
     /*
      * =========================
@@ -287,6 +231,62 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           /'/g,
           '&#039;'
         );
+    }
+
+    /*
+     * =========================
+     * ΒΡΙΣΚΟΥΜΕ ΤΗΝ
+     * ΤΡΕΧΟΥΣΑ / ΕΠΟΜΕΝΗ
+     * =========================
+     */
+
+    function getCurrentOrNextEvent() {
+
+      const now =
+        new Date();
+
+      return events
+        .filter(event => {
+
+          /*
+           * Αν έχει DTEND,
+           * παραμένει μέχρι
+           * να τελειώσει.
+           */
+
+          if (event.endObj) {
+            return event.endObj > now;
+          }
+
+          return event.dateObj >= now;
+        })
+
+        .sort(
+          (a, b) =>
+            a.dateObj - b.dateObj
+        )[0] || null;
+    }
+
+    /*
+     * =========================
+     * ΜΟΝΑΔΙΚΟ ID ΓΕΓΟΝΟΤΟΣ
+     * =========================
+     */
+
+    function eventKey(event) {
+
+      if (!event) {
+        return 'none';
+      }
+
+      return [
+        event.dateObj.getTime(),
+        event.endObj
+          ? event.endObj.getTime()
+          : '',
+        event.summary,
+        event.location
+      ].join('|');
     }
 
     /*
@@ -347,7 +347,9 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         </div>
       `;
 
-      container.appendChild(page);
+      container.appendChild(
+        page
+      );
 
       document
         .getElementById(
@@ -411,284 +413,402 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
     /*
      * =========================
-     * ΜΕΓΑΛΗ ΚΑΡΤΑ
-     * ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
+     * ΑΝΤΙΣΤΡΟΦΗ ΜΕΤΡΗΣΗ
      * =========================
      */
 
-    const nextEventCard =
-      document.getElementById(
-        'nextEventCard'
-      );
+    function countdownText(event) {
 
-    if (
-      nextEventCard &&
-      nextEvent
-    ) {
-
-      function countdownText() {
-
-        const difference =
-          nextEvent.dateObj.getTime()
-          - Date.now();
-
-        if (
-          difference <= 0
-        ) {
-
-          return 'Σε εξέλιξη';
-        }
-
-        const totalMinutes =
-          Math.floor(
-            difference / 60000
-          );
-
-        const days =
-          Math.floor(
-            totalMinutes / 1440
-          );
-
-        const hours =
-          Math.floor(
-            (totalMinutes % 1440) / 60
-          );
-
-        const minutes =
-          totalMinutes % 60;
-
-        if (days > 0) {
-
-          return (
-            `Σε ${days} ` +
-            `ημέρα${days === 1 ? '' : 'ες'}` +
-            ` και ${hours} ώρ.`
-          );
-        }
-
-        if (hours > 0) {
-
-          return (
-            `Σε ${hours} ώρ. ` +
-            `και ${minutes}΄`
-          );
-        }
-
-        return (
-          `Σε ${minutes}΄`
-        );
+      if (!event) {
+        return '';
       }
 
-      /*
-       * Τοποθεσία
-       * ΧΩΡΙΣ Google Maps
-       */
+      const now =
+        Date.now();
 
-      let locationHtml =
-        '';
+      /*
+       * Η ακολουθία βρίσκεται
+       * ήδη σε εξέλιξη.
+       */
 
       if (
-        nextEvent.location
+        event.dateObj.getTime() <= now &&
+        event.endObj &&
+        event.endObj.getTime() > now
       ) {
 
-        locationHtml = `
-          <div class="next-card-location">
-            📍 ${escapeHtml(nextEvent.location)}
-          </div>
-        `;
+        return 'Σε εξέλιξη';
       }
 
-      /*
-       * Κάρτα
-       */
+      const difference =
+        event.dateObj.getTime()
+        - now;
 
-      nextEventCard.innerHTML = `
+      if (
+        difference <= 0
+      ) {
 
-        <div class="next-card-label">
-          ⛪️ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
-        </div>
+        return 'Σε εξέλιξη';
+      }
 
-        <div class="next-card-date">
-          ${escapeHtml(
-            nextEvent.date
-          )}
-        </div>
-
-        <div class="next-card-time">
-          ${escapeHtml(nextEvent.time)}
-          ${
-            nextEvent.endTime
-              ? ` – ${escapeHtml(nextEvent.endTime)}`
-              : ''
-          }
-        </div>
-
-        <div class="next-card-title">
-          ${escapeHtml(
-            nextEvent.summary
-          )}
-        </div>
-
-        ${locationHtml}
-
-        <div
-          id="nextCountdown"
-          class="next-card-countdown"
-        >
-          ${countdownText()}
-        </div>
-      `;
-
-      /*
-       * Live countdown.
-       */
-
-      const countdown =
-        document.getElementById(
-          'nextCountdown'
+      const totalMinutes =
+        Math.floor(
+          difference / 60000
         );
 
-      setInterval(
-        () => {
+      const days =
+        Math.floor(
+          totalMinutes / 1440
+        );
 
-          if (countdown) {
+      const hours =
+        Math.floor(
+          (totalMinutes % 1440) / 60
+        );
 
-            countdown.textContent =
-              countdownText();
-          }
+      const minutes =
+        totalMinutes % 60;
 
-        },
-        30000
+      if (days > 0) {
+
+        return (
+          `Σε ${days} ` +
+          `ημέρα${days === 1 ? '' : 'ες'}` +
+          ` και ${hours} ώρ.`
+        );
+      }
+
+      if (hours > 0) {
+
+        return (
+          `Σε ${hours} ώρ. ` +
+          `και ${minutes}΄`
+        );
+      }
+
+      return (
+        `Σε ${minutes}΄`
       );
     }
 
     /*
      * =========================
-     * ΕΜΦΑΝΙΣΗ ΓΕΓΟΝΟΤΩΝ
+     * ΕΜΦΑΝΙΣΗ ΠΡΟΓΡΑΜΜΑΤΟΣ
      * =========================
      */
 
-    upcoming.forEach(event => {
+    function renderProgram() {
 
-      const li =
-        document.createElement(
-          'li'
-        );
+      const nextEvent =
+        getCurrentOrNextEvent();
 
       /*
-       * Το γεγονός ανοίγει
-       * το εορτολόγιο.
+       * =========================
+       * ΜΕΓΑΛΗ ΚΑΡΤΑ
+       * =========================
        */
 
-      li.style.cursor =
-        'pointer';
+      const nextEventCard =
+        document.getElementById(
+          'nextEventCard'
+        );
 
-      li.addEventListener(
-        'click',
-        () => {
-          showCalendar(event);
+      if (nextEventCard) {
+
+        if (!nextEvent) {
+
+          nextEventCard.innerHTML =
+            '';
+
+        } else {
+
+          let locationHtml =
+            '';
+
+          /*
+           * Η τοποθεσία εμφανίζεται
+           * απλά ως κείμενο.
+           * Χωρίς Google Maps.
+           */
+
+          if (
+            nextEvent.location
+          ) {
+
+            locationHtml = `
+              <div class="next-card-location">
+                📍 ${escapeHtml(
+                  nextEvent.location
+                )}
+              </div>
+            `;
+          }
+
+          nextEventCard.innerHTML = `
+
+            <div class="next-card-label">
+              ⛪️ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
+            </div>
+
+            <div class="next-card-date">
+              ${escapeHtml(
+                nextEvent.date
+              )}
+            </div>
+
+            <div class="next-card-time">
+
+              ${escapeHtml(
+                nextEvent.time
+              )}
+
+              ${
+                nextEvent.endTime
+                  ? ` – ${escapeHtml(
+                      nextEvent.endTime
+                    )}`
+                  : ''
+              }
+
+            </div>
+
+            <div class="next-card-title">
+              ${escapeHtml(
+                nextEvent.summary
+              )}
+            </div>
+
+            ${locationHtml}
+
+            <div
+              id="nextCountdown"
+              class="next-card-countdown"
+            >
+              ${countdownText(
+                nextEvent
+              )}
+            </div>
+
+          `;
+        }
+      }
+
+      /*
+       * =========================
+       * ΛΙΣΤΑ
+       * =========================
+       */
+
+      const now =
+        new Date();
+
+      const upcoming =
+        events
+
+          .filter(event => {
+
+            if (event.endObj) {
+              return event.endObj > now;
+            }
+
+            return event.dateObj >= now;
+          })
+
+          .sort(
+            (a, b) =>
+              a.dateObj - b.dateObj
+          );
+
+      list.innerHTML =
+        '';
+
+      upcoming.forEach(
+        event => {
+
+          const li =
+            document.createElement(
+              'li'
+            );
+
+          li.style.cursor =
+            'pointer';
+
+          /*
+           * Πάτημα ακολουθίας
+           * ανοίγει το εορτολόγιο.
+           */
+
+          li.addEventListener(
+            'click',
+            () => {
+
+              showCalendar(
+                event
+              );
+            }
+          );
+
+          if (
+            nextEvent &&
+            eventKey(event) ===
+            eventKey(nextEvent)
+          ) {
+
+            li.classList.add(
+              'next-event'
+            );
+          }
+
+          const strong =
+            document.createElement(
+              'strong'
+            );
+
+          strong.textContent =
+            `${event.date} · ${event.time}`;
+
+          li.appendChild(
+            strong
+          );
+
+          if (
+            event.endTime
+          ) {
+
+            li.appendChild(
+              document.createTextNode(
+                ` – ${event.endTime}`
+              )
+            );
+          }
+
+          li.appendChild(
+            document.createElement(
+              'br'
+            )
+          );
+
+          li.appendChild(
+            document.createTextNode(
+              event.summary
+            )
+          );
+
+          /*
+           * Τοποθεσία
+           * χωρίς Maps.
+           */
+
+          if (
+            event.location
+          ) {
+
+            li.appendChild(
+              document.createElement(
+                'br'
+              )
+            );
+
+            const small =
+              document.createElement(
+                'small'
+              );
+
+            small.textContent =
+              `📍 ${event.location}`;
+
+            li.appendChild(
+              small
+            );
+          }
+
+          list.appendChild(
+            li
+          );
         }
       );
 
-      /*
-       * Αν είναι η τρέχουσα
-       * ακολουθία.
-       */
-
-      if (
-        nextEvent &&
-        event === nextEvent
-      ) {
-
-        li.classList.add(
-          'next-event'
-        );
-      }
-
-      /*
-       * Ημερομηνία / ώρα
-       */
-
-      const strong =
-        document.createElement(
-          'strong'
-        );
-
-      strong.textContent =
-        `${event.date} · ${event.time}`;
-
-      li.appendChild(
-        strong
-      );
-
-      li.appendChild(
-        document.createElement(
-          'br'
-        )
-      );
-
-      /*
-       * Τίτλος
-       */
-
-      li.appendChild(
-        document.createTextNode(
-          event.summary
-        )
-      );
-
-      /*
-       * Τοποθεσία
-       * ΧΩΡΙΣ Google Maps
-       */
-
-      if (
-        event.location
-      ) {
-
-        li.appendChild(
-          document.createElement(
-            'br'
-          )
-        );
-
-        const small =
-          document.createElement(
-            'small'
-          );
-
-        small.textContent =
-          `📍 ${event.location}`;
-
-        li.appendChild(
-          small
-        );
-      }
-
-      list.appendChild(
-        li
-      );
-    });
+      return nextEvent;
+    }
 
     /*
      * =========================
-     * ΑΥΤΟΜΑΤΗ ΑΝΑΝΕΩΣΗ
+     * ΠΡΩΤΗ ΕΜΦΑΝΙΣΗ
+     * =========================
+     */
+
+    let displayedEventKey =
+      eventKey(
+        renderProgram()
+      );
+
+    /*
+     * =========================
+     * ΑΝΑΝΕΩΣΗ ΧΩΡΙΣ REFRESH
      * =========================
      *
-     * Κάθε λεπτό ελέγχουμε
-     * ξανά το DTSTART / DTEND.
+     * ΠΟΛΥ ΣΗΜΑΝΤΙΚΟ:
      *
-     * Όταν περάσει το DTEND,
-     * η τρέχουσα ακολουθία
-     * αφαιρείται και η επόμενη
-     * γίνεται αυτόματα η νέα.
+     * Δεν χρησιμοποιούμε:
+     *
+     * location.reload()
+     *
+     * Επομένως το iframe του
+     * RadioFloga ΔΕΝ καταστρέφεται.
      */
 
     setInterval(
       () => {
-        location.reload();
+
+        const currentEvent =
+          getCurrentOrNextEvent();
+
+        const currentKey =
+          eventKey(
+            currentEvent
+          );
+
+        /*
+         * Μόνο όταν αλλάξει
+         * η τρέχουσα/επόμενη
+         * ακολουθία ξαναζωγραφίζουμε
+         * το πρόγραμμα.
+         */
+
+        if (
+          currentKey !==
+          displayedEventKey
+        ) {
+
+          displayedEventKey =
+            currentKey;
+
+          renderProgram();
+        }
+
+        /*
+         * Ενημέρωση αντίστροφης
+         * μέτρησης κάθε δευτερόλεπτο.
+         */
+
+        const countdown =
+          document.getElementById(
+            'nextCountdown'
+          );
+
+        if (
+          countdown &&
+          currentEvent
+        ) {
+
+          countdown.textContent =
+            countdownText(
+              currentEvent
+            );
+        }
+
       },
-      60000
+      1000
     );
 
   })
