@@ -173,13 +173,14 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       const time =
         `${m[2].slice(0, 2)}:` +
         `${m[2].slice(2, 4)}`;
-        let endTime = '';
 
-if (mEnd) {
-  endTime =
-    `${mEnd[2].slice(0, 2)}:` +
-    `${mEnd[2].slice(2, 4)}`;
-}
+      let endTime = '';
+
+      if (mEnd) {
+        endTime =
+          `${mEnd[2].slice(0, 2)}:` +
+          `${mEnd[2].slice(2, 4)}`;
+      }
 
       /*
        * =========================
@@ -196,8 +197,9 @@ if (mEnd) {
         date,
 
         time,
-         
-        endTime, 
+
+        endTime,
+
         summary:
           get('SUMMARY'),
 
@@ -228,19 +230,9 @@ if (mEnd) {
       events
         .filter(event => {
 
-          /*
-           * Αν υπάρχει DTEND,
-           * κρατάμε το γεγονός
-           * μέχρι να τελειώσει.
-           */
-
           if (event.endObj) {
             return event.endObj > now;
           }
-
-          /*
-           * Ασφάλεια αν δεν υπάρχει DTEND.
-           */
 
           return event.dateObj >= now;
         })
@@ -312,10 +304,6 @@ if (mEnd) {
 
       if (!container) return;
 
-      /*
-       * Κρύβουμε την αρχική οθόνη.
-       */
-
       container
         .querySelectorAll(
           ':scope > *'
@@ -328,10 +316,6 @@ if (mEnd) {
           el.style.display =
             'none';
         });
-
-      /*
-       * Δημιουργούμε τη σελίδα.
-       */
 
       const page =
         document.createElement(
@@ -365,10 +349,6 @@ if (mEnd) {
 
       container.appendChild(page);
 
-      /*
-       * Επιστροφή.
-       */
-
       document
         .getElementById(
           'calendar-back'
@@ -395,19 +375,11 @@ if (mEnd) {
           }
         );
 
-      /*
-       * Ημερομηνία για saint.gr
-       */
-
       const saintMonth =
         event.dateObj.getMonth() + 1;
 
       const saintDay =
         event.dateObj.getDate();
-
-      /*
-       * iframe
-       */
 
       const iframe =
         document.createElement(
@@ -454,21 +426,11 @@ if (mEnd) {
       nextEvent
     ) {
 
-      /*
-       * Αντίστροφη μέτρηση.
-       */
-
       function countdownText() {
 
         const difference =
           nextEvent.dateObj.getTime()
           - Date.now();
-
-        /*
-         * Αν η ακολουθία
-         * έχει ήδη ξεκινήσει,
-         * δείχνουμε ότι είναι τώρα.
-         */
 
         if (
           difference <= 0
@@ -518,7 +480,8 @@ if (mEnd) {
       }
 
       /*
-       * Google Maps URL
+       * Τοποθεσία
+       * ΧΩΡΙΣ Google Maps
        */
 
       let locationHtml =
@@ -528,23 +491,9 @@ if (mEnd) {
         nextEvent.location
       ) {
 
-        const mapsUrl =
-          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(nextEvent.location)}`;
-
         locationHtml = `
           <div class="next-card-location">
-            <a
-              href="${mapsUrl}"
-              target="_blank"
-              rel="noopener"
-              style="
-                color:inherit;
-                text-decoration:none;
-              "
-              id="nextEventLocation"
-            >
-              📍 ${escapeHtml(nextEvent.location)}
-            </a>
+            📍 ${escapeHtml(nextEvent.location)}
           </div>
         `;
       }
@@ -566,13 +515,13 @@ if (mEnd) {
         </div>
 
         <div class="next-card-time">
-  ${escapeHtml(nextEvent.time)}
-  ${
-    nextEvent.endTime
-      ? ` – ${escapeHtml(nextEvent.endTime)}`
-      : ''
-  }
-</div>
+          ${escapeHtml(nextEvent.time)}
+          ${
+            nextEvent.endTime
+              ? ` – ${escapeHtml(nextEvent.endTime)}`
+              : ''
+          }
+        </div>
 
         <div class="next-card-title">
           ${escapeHtml(
@@ -589,27 +538,6 @@ if (mEnd) {
           ${countdownText()}
         </div>
       `;
-
-      /*
-       * Το πάτημα της τοποθεσίας
-       * δεν πρέπει να ανοίγει
-       * το εορτολόγιο.
-       */
-
-      const nextLocation =
-        document.getElementById(
-          'nextEventLocation'
-        );
-
-      if (nextLocation) {
-
-        nextLocation.addEventListener(
-          'click',
-          event => {
-            event.stopPropagation();
-          }
-        );
-      }
 
       /*
        * Live countdown.
@@ -664,8 +592,7 @@ if (mEnd) {
 
       /*
        * Αν είναι η τρέχουσα
-       * ακολουθία, κρατάμε
-       * το next-event styling.
+       * ακολουθία.
        */
 
       if (
@@ -712,6 +639,7 @@ if (mEnd) {
 
       /*
        * Τοποθεσία
+       * ΧΩΡΙΣ Google Maps
        */
 
       if (
@@ -731,38 +659,6 @@ if (mEnd) {
 
         small.textContent =
           `📍 ${event.location}`;
-
-        small.style.cursor =
-          'pointer';
-
-        small.style.textDecoration =
-          'underline';
-
-        /*
-         * Google Maps
-         */
-
-        small.addEventListener(
-          'click',
-          e => {
-
-            /*
-             * Δεν ανοίγουμε
-             * το εορτολόγιο.
-             */
-
-            e.stopPropagation();
-
-            const mapsUrl =
-              `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`;
-
-            window.open(
-              mapsUrl,
-              '_blank' 
-              
-            );
-          }
-        );
 
         li.appendChild(
           small
