@@ -195,7 +195,7 @@ DTSTAMP:20260811T224200Z
 DTSTART;TZID=Europe/Athens:20260830T070000
 DTEND;TZID=Europe/Athens:20260830T100000
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οία «Παναγία Πλατσανή»
+LOCATION:Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οίας «Παναγία Πλατσανή»
 END:VEVENT
 BEGIN:VEVENT
 UID:bf556e65-4bf1-4829-a44b-380b540d23b2@oia
@@ -203,6 +203,6 @@ DTSTAMP:20260811T224200Z
 DTSTART;TZID=Europe/Athens:20260901T071500
 DTEND;TZID=Europe/Athens:20260901T091500
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οία «Παναγία Πλατσανή»
+LOCATION:Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οίας «Παναγία Πλατσανή»
 END:VEVENT
 END:VCALENDAR
