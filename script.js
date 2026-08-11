@@ -1544,16 +1544,3 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       );
     }
   );
-  const calendarBtn = document.getElementById("calendarBtn");
-
-if (calendarBtn) {
-  calendarBtn.addEventListener("click", function () {
-    const separator = calendarBtn.href.includes("?") ? "&" : "?";
-
-    calendarBtn.href =
-      "calendar.ics" +
-      separator +
-      "v=" +
-      Date.now();
-  });
-}
