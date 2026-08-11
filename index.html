@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-<title>Πρόγραμμα ιερών ακολουθιών ιερού ενοριακού ναού Παναγίας Ακαθίστου Ύμνου Οίας "Παναγία Πλατσανή"</title><link rel='stylesheet' href='style.css?v=5'>
+<title id="pageTitle">Πρόγραμμα Ιερών Ακολουθιών • Ενορία Οίας</title><link rel='stylesheet' href='style.css?v=6'>
 <link rel="manifest" href="manifest.json">
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
@@ -26,12 +26,17 @@ OneSignalDeferred.push(async function(OneSignal) {
 </script>
 
 </head><body><div class="container">
+<div class="language-switcher" aria-label="Language">
+  <button id="langEl" class="lang-btn active" type="button" aria-label="Ελληνικά">🇬🇷</button>
+  <button id="langEn" class="lang-btn" type="button" aria-label="English">🇬🇧</button>
+</div>
+
 
 <div class="church-image">
   <img src="church.jpg" alt="Ιερός Ναός Παναγίας Ακαθίστου Ύμνου Οίας">
-</div><h1>Πρόγραμμα ιερών ακολουθιών ιερού ενοριακού ναού Παναγίας Ακαθίστου Ύμνου Οίας "Παναγία Πλατσανή"</h1>
+</div><h1 data-i18n="mainTitle">Πρόγραμμα Ιερών Ακολουθιών • Ενορία Οίας</h1>
 <div id="nextEventCard" class="next-event-card"></div>
-<p><a class='btn' href='calendar.ics'>📅 Προσθήκη στο Ημερολόγιο</a><button id="installBtn" class="btn secondary" type="button" onclick="document.getElementById('installHelp').hidden=false">📱 Προσθήκη στην Αφετηρία</button>
+<p><a class="btn" href="calendar.ics" data-i18n="addCalendar">📅 Προσθήκη στο Ημερολόγιο</a><button id="installBtn" class="btn secondary" type="button" onclick="document.getElementById('installHelp').hidden=false" data-i18n="addHome">📱 Προσθήκη στην Αφετηρία</button>
 <div class="radio-player">
   <iframe
     src="https://volticast.com/embed/radiofloga"
@@ -46,15 +51,15 @@ OneSignalDeferred.push(async function(OneSignal) {
   <div class="install-card" role="dialog" aria-modal="true" aria-labelledby="installTitle">
     <button id="closeInstall" class="install-close" type="button" aria-label="Κλείσιμο" onclick="document.getElementById('installHelp').setAttribute('hidden','')">×</button>
     <div class="install-icon">📱</div>
-    <h2 id="installTitle">Προσθήκη στην Αφετηρία</h2>
-    <p>Στο iPhone:</p>
+    <h2 id="installTitle" data-i18n="addHome">Προσθήκη στην Αφετηρία</h2>
+    <p data-i18n="onIphone">Στο iPhone:</p>
     <ol>
-      <li>Πάτησε <strong>Κοινοποίηση</strong> ↗ στο Safari.</li>
-      <li>Επίλεξε <strong>«Προσθήκη στην Αφετηρία»</strong>.</li>
-      <li>Πάτησε <strong>«Προσθήκη»</strong>.</li>
+      <li data-i18n-html="shareStep">Πάτησε <strong>Κοινοποίηση</strong> ↗ στο Safari.</li>
+      <li data-i18n-html="homeStep">Επίλεξε <strong>«Προσθήκη στην Αφετηρία»</strong>.</li>
+      <li data-i18n-html="addStep">Πάτησε <strong>«Προσθήκη»</strong>.</li>
     </ol>
-    <button id="closeInstall2" class="btn" type="button" onclick="document.getElementById('installHelp').setAttribute('hidden','')">Εντάξει</button>
+    <button id="closeInstall2" class="btn" type="button" onclick="document.getElementById('installHelp').setAttribute('hidden','')" data-i18n="ok">Εντάξει</button>
   </div>
 </div>
 
-<script src="script.js?v=16"></script></div></body></html>
+<script src="script.js?v=17"></script></div></body></html>

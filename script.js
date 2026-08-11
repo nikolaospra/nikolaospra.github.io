@@ -9,6 +9,126 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
   .then(ics => {
 
+    /*
+     * =========================
+     * ΔΙΓΛΩΣΣΗ ΛΕΙΤΟΥΡΓΙΑ
+     * =========================
+     */
+
+    const translations = {
+      el: {
+        mainTitle: 'Πρόγραμμα Ιερών Ακολουθιών • Ενορία Οίας',
+        addCalendar: '📅 Προσθήκη στο Ημερολόγιο',
+        addHome: '📱 Προσθήκη στην Αφετηρία',
+        onIphone: 'Στο iPhone:',
+        shareStep: 'Πάτησε <strong>Κοινοποίηση</strong> ↗ στο Safari.',
+        homeStep: 'Επίλεξε <strong>«Προσθήκη στην Αφετηρία»</strong>.',
+        addStep: 'Πάτησε <strong>«Προσθήκη»</strong>.',
+        ok: 'Εντάξει',
+        nextService: '⛪️ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ',
+        inProgress: 'Σε εξέλιξη',
+        backToSchedule: '← Επιστροφή στο πρόγραμμα',
+        calendarTitle: '✝️ Εορτολόγιο',
+        errorCalendar: 'Δεν ήταν δυνατή η φόρτωση του προγράμματος.',
+        weekdays: ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'],
+        hoursShort: 'ώρ.',
+        minutesShort: '΄',
+        dayOne: 'ημέρα',
+        dayMany: 'ημέρες'
+      },
+      en: {
+        mainTitle: 'Holy Services Schedule • Oia Parish',
+        addCalendar: '📅 Add to Calendar',
+        addHome: '📱 Add to Home Screen',
+        onIphone: 'On iPhone:',
+        shareStep: 'Tap <strong>Share</strong> ↗ in Safari.',
+        homeStep: 'Select <strong>“Add to Home Screen”</strong>.',
+        addStep: 'Tap <strong>“Add”</strong>.',
+        ok: 'Done',
+        nextService: '⛪️ NEXT SERVICE',
+        inProgress: 'In progress',
+        backToSchedule: '← Back to schedule',
+        calendarTitle: '✝️ Saints’ Calendar',
+        errorCalendar: 'The service schedule could not be loaded.',
+        weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+        hoursShort: 'hr.',
+        minutesShort: 'min.',
+        dayOne: 'day',
+        dayMany: 'days'
+      }
+    };
+
+    const serviceTranslations = {
+      'Όρθρος - Θεία Λειτουργία': 'Matins - Divine Liturgy',
+      'Εσπερινός': 'Vespers',
+      'Εσπερινός & Μεγάλη Παράκληση': 'Vespers & Great Paraklesis',
+      'Εσπερινός & Μικρή Παράκληση': 'Vespers & Small Paraklesis',
+      'Εσπερινός & Εγκώμια': 'Vespers & Lamentations',
+      'Λιτάνευση Επιταφίου': 'Epitaphios Procession'
+    };
+
+    let currentLanguage =
+      localStorage.getItem('oiaLanguage') ||
+      ((navigator.language || '').toLowerCase().startsWith('el') ? 'el' : 'en');
+
+    function t(key) {
+      return translations[currentLanguage][key] ??
+        translations.el[key] ??
+        key;
+    }
+
+    function translateService(text) {
+      if (currentLanguage === 'el') return text;
+      return serviceTranslations[text] || text;
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = currentLanguage;
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (translations[currentLanguage][key] !== undefined) {
+          el.textContent = translations[currentLanguage][key];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (translations[currentLanguage][key] !== undefined) {
+          el.innerHTML = translations[currentLanguage][key];
+        }
+      });
+
+      const title = document.getElementById('pageTitle');
+      if (title) {
+        title.textContent =
+          currentLanguage === 'el'
+            ? 'Πρόγραμμα Ιερών Ακολουθιών • Ενορία Οίας'
+            : 'Holy Services Schedule • Oia Parish';
+      }
+
+      const elBtn = document.getElementById('langEl');
+      const enBtn = document.getElementById('langEn');
+
+      if (elBtn) elBtn.classList.toggle('active', currentLanguage === 'el');
+      if (enBtn) enBtn.classList.toggle('active', currentLanguage === 'en');
+
+      if (typeof renderProgram === 'function') {
+        renderProgram();
+      }
+    }
+
+    function setLanguage(language) {
+      if (language !== 'el' && language !== 'en') return;
+      currentLanguage = language;
+      localStorage.setItem('oiaLanguage', language);
+      applyLanguage();
+    }
+
+    document.getElementById('langEl')?.addEventListener('click', () => setLanguage('el'));
+    document.getElementById('langEn')?.addEventListener('click', () => setLanguage('en'));
+
+
     const list =
       document.getElementById('events');
 
@@ -152,15 +272,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
        * =========================
        */
 
-      const weekdays = [
-        'Κυριακή',
-        'Δευτέρα',
-        'Τρίτη',
-        'Τετάρτη',
-        'Πέμπτη',
-        'Παρασκευή',
-        'Σάββατο'
-      ];
+      const weekdays = translations[currentLanguage].weekdays;
 
       const weekday =
         weekdays[
@@ -333,11 +445,11 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             id="calendar-back"
             class="calendar-back"
           >
-            ← Επιστροφή στο πρόγραμμα
+            ${t('backToSchedule')}
           </button>
 
           <div class="calendar-title">
-            ✝️ Εορτολόγιο
+            ${t('calendarTitle')}
           </div>
 
           <div class="calendar-date">
@@ -437,7 +549,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         event.endObj.getTime() > now
       ) {
 
-        return 'Σε εξέλιξη';
+        return t('inProgress');
       }
 
       const difference =
@@ -448,7 +560,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         difference <= 0
       ) {
 
-        return 'Σε εξέλιξη';
+        return t('inProgress');
       }
 
       const totalMinutes =
@@ -472,23 +584,22 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       if (days > 0) {
 
         return (
-          `Σε ${days} ` +
-          `ημέρα${days === 1 ? '' : 'ες'}` +
-          ` και ${hours} ώρ.`
+          currentLanguage === 'el'
+            ? `Σε ${days} ${days === 1 ? t('dayOne') : t('dayMany')} και ${hours} ${t('hoursShort')}`
+            : `In ${days} ${days === 1 ? t('dayOne') : t('dayMany')} and ${hours} ${t('hoursShort')}`
         );
       }
 
       if (hours > 0) {
 
-        return (
-          `Σε ${hours} ώρ. ` +
-          `και ${minutes}΄`
-        );
+        return currentLanguage === 'el'
+          ? `Σε ${hours} ${t('hoursShort')} και ${minutes}${t('minutesShort')}`
+          : `In ${hours} ${t('hoursShort')} and ${minutes} ${t('minutesShort')}`;
       }
 
-      return (
-        `Σε ${minutes}΄`
-      );
+      return currentLanguage === 'el'
+        ? `Σε ${minutes}${t('minutesShort')}`
+        : `In ${minutes} ${t('minutesShort')}`;
     }
 
     /*
@@ -547,7 +658,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           nextEventCard.innerHTML = `
 
             <div class="next-card-label">
-              ⛪️ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
+              ${t('nextService')}
             </div>
 
             <div class="next-card-date">
@@ -690,7 +801,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
           li.appendChild(
             document.createTextNode(
-              event.summary
+              translateService(event.summary)
             )
           );
 
@@ -736,6 +847,8 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
      * ΠΡΩΤΗ ΕΜΦΑΝΙΣΗ
      * =========================
      */
+
+    applyLanguage();
 
     let displayedEventKey =
       eventKey(
@@ -822,8 +935,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
     if (list) {
 
-      list.textContent =
-        'Δεν ήταν δυνατή η φόρτωση του προγράμματος.';
+      list.textContent = t('errorCalendar');
     }
 
     console.error(
