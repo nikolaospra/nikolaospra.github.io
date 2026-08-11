@@ -408,3 +408,155 @@ button.btn{font-family:inherit;cursor:pointer}
     font-size:20px;
   }
 }
+/* =========================================
+   ΠΛΑΙΣΙΟ ΟΝΟΜΑΤΟΣ ΝΑΟΥ
+   ========================================= */
+
+.church-title {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px 16px;
+  margin: 14px 0 16px;
+
+  text-align: center;
+
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.45;
+
+  box-shadow:
+    0 6px 18px rgba(55, 38, 25, 0.08);
+}
+
+
+/* =========================================
+   ΜΕΓΑΛΗ ΚΑΡΤΑ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
+   ========================================= */
+
+.next-event-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+
+  padding: 22px 18px;
+  margin: 16px 0;
+
+  text-align: center;
+
+  box-shadow:
+    0 7px 20px rgba(55, 38, 25, 0.10);
+}
+
+
+/* Τίτλος κάρτας */
+
+.next-card-label {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+
+/* Ημερομηνία */
+
+.next-card-date {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+
+/* Ώρα */
+
+.next-card-time {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+
+
+/* Όνομα ακολουθίας */
+
+.next-card-title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+
+/* Τοποθεσία */
+
+.next-card-location {
+  font-size: 16px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+
+/* Αντίστροφη μέτρηση */
+
+.next-card-countdown {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 14px;
+}
+
+
+/* =========================================
+   ΠΛΑΙΣΙΟ ΠΡΟΓΡΑΜΜΑΤΟΣ
+   ========================================= */
+
+.schedule-title {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  padding: 15px 16px;
+  margin: 20px 0 12px;
+
+  text-align: center;
+
+  font-size: 23px;
+  font-weight: 800;
+
+  box-shadow:
+    0 6px 18px rgba(55, 38, 25, 0.08);
+}
+
+
+/* =========================================
+   ΚΙΝΗΤΑ
+   ========================================= */
+
+@media (max-width: 480px) {
+
+  .church-title {
+    font-size: 20px;
+    padding: 17px 13px;
+  }
+
+  .next-card-label {
+    font-size: 17px;
+  }
+
+  .next-card-date {
+    font-size: 17px;
+  }
+
+  .next-card-time {
+    font-size: 29px;
+  }
+
+  .next-card-title {
+    font-size: 21px;
+  }
+
+  .schedule-title {
+    font-size: 22px;
+    padding: 15px 12px;
+  }
+
+}
