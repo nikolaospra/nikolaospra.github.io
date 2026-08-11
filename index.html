@@ -1,74 +1,323 @@
 <!doctype html>
 <html lang="el">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-<title id="pageTitle">Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οίας Παναγία Πλατσανή</title><link rel='stylesheet' href='style.css?v=6'>
-<link rel="manifest" href="manifest.json">
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1"
+>
+
+<link
+  rel="apple-touch-icon"
+  href="/apple-touch-icon.png"
+>
+
+<link
+  rel="icon"
+  type="image/png"
+  sizes="192x192"
+  href="/icon-192.png"
+>
+
+<title id="pageTitle">
+  Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οίας Παναγία Πλατσανή
+</title>
+
+<link
+  rel="stylesheet"
+  href="style.css?v=6"
+>
+
+<link
+  rel="manifest"
+  href="manifest.json"
+>
+
+
+<script
+  src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+  defer
+></script>
+
 
 <script>
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-OneSignalDeferred.push(async function(OneSignal) {
-  await OneSignal.init({
-    appId: "930afb48-3d13-4539-8197-c81f61e7e154",
 
-    serviceWorkerPath: "OneSignalSDKWorker.js",
-    serviceWorkerUpdaterPath: "OneSignalSDKUpdaterWorker.js",
+window.OneSignalDeferred =
+  window.OneSignalDeferred || [];
 
-    notifyButton: {
-      enable: true
-    }
-  });
-});
+OneSignalDeferred.push(
+  async function(OneSignal) {
+
+    await OneSignal.init({
+
+      appId:
+        "930afb48-3d13-4539-8197-c81f61e7e154",
+
+      serviceWorkerPath:
+        "OneSignalSDKWorker.js",
+
+      serviceWorkerUpdaterPath:
+        "OneSignalSDKUpdaterWorker.js",
+
+      notifyButton: {
+        enable: true
+      }
+
+    });
+
+  }
+);
+
 </script>
 
-</head><body><div class="container">
-<div class="language-switcher" aria-label="Language">
-  <button id="langEl" class="lang-btn active" type="button" aria-label="Ελληνικά">🇬🇷</button>
-  <button id="langEn" class="lang-btn" type="button" aria-label="English">🇬🇧</button>
-</div>
+</head>
 
 
-<div class="church-image">
-  <img src="church.jpg" alt="Ιερός Ναός Παναγίας Ακαθίστου Ύμνου Οίας Παναγία Πλατσανή">
-</div>
-<div class="church-title">
-  Ιερός Ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας
-  <br>
-  «Παναγία Πλατσανή»
-</div>
+<body>
 
-<div class="schedule-title" data-i18n="mainTitle">
-  Πρόγραμμα Ιερών Ακολουθιών
-</div>
-<div id="nextEventCard" class="next-event-card"></div>
-<p><a class="btn" href="calendar.ics" data-i18n="addCalendar">📅 Προσθήκη στο Ημερολόγιο</a><button id="installBtn" class="btn secondary" type="button" onclick="document.getElementById('installHelp').hidden=false" data-i18n="addHome">📱 Προσθήκη στην Αφετηρία</button>
-<div class="radio-player">
-  <iframe
-    src="https://volticast.com/embed/radiofloga"
-    height="120"
-    frameborder="0"
-    scrolling="no"
-    allow="autoplay">
-  </iframe>
-</div>
-</p><ul id='events'></ul>
-<div id="installHelp" class="install-help" hidden>
-  <div class="install-card" role="dialog" aria-modal="true" aria-labelledby="installTitle">
-    <button id="closeInstall" class="install-close" type="button" aria-label="Κλείσιμο" onclick="document.getElementById('installHelp').setAttribute('hidden','')">×</button>
-    <div class="install-icon">📱</div>
-    <h2 id="installTitle" data-i18n="addHome">Προσθήκη στην Αφετηρία</h2>
-    <p data-i18n="onIphone">Στο iPhone:</p>
-    <ol>
-      <li data-i18n-html="shareStep">Πάτησε <strong>Κοινοποίηση</strong> ↗ στο Safari.</li>
-      <li data-i18n-html="homeStep">Επίλεξε <strong>«Προσθήκη στην Αφετηρία»</strong>.</li>
-      <li data-i18n-html="addStep">Πάτησε <strong>«Προσθήκη»</strong>.</li>
-    </ol>
-    <button id="closeInstall2" class="btn" type="button" onclick="document.getElementById('installHelp').setAttribute('hidden','')" data-i18n="ok">Εντάξει</button>
+
+<div class="container">
+
+
+  <!-- =========================
+       ΕΠΙΛΟΓΗ ΓΛΩΣΣΑΣ
+       ========================= -->
+
+  <div
+    class="language-switcher"
+    aria-label="Language"
+  >
+
+    <button
+      id="langEl"
+      class="lang-btn active"
+      type="button"
+      aria-label="Ελληνικά"
+    >
+      🇬🇷
+    </button>
+
+    <button
+      id="langEn"
+      class="lang-btn"
+      type="button"
+      aria-label="English"
+    >
+      🇬🇧
+    </button>
+
   </div>
+
+
+  <!-- =========================
+       ΕΙΚΟΝΑ ΝΑΟΥ
+       ========================= -->
+
+  <div class="church-image">
+
+    <img
+      src="church.jpg"
+      alt="Ιερός Ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας «Παναγία Πλατσανή»"
+    >
+
+  </div>
+
+
+  <!-- =========================
+       ΟΝΟΜΑ ΝΑΟΥ
+       ========================= -->
+
+  <div class="church-title">
+
+    Ιερός Ενοριακός Ναός
+    Παναγίας Ακαθίστου Ύμνου Οίας
+
+    <br>
+
+    «Παναγία Πλατσανή»
+
+  </div>
+
+
+  <!-- =========================
+       ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ
+       ========================= -->
+
+  <div
+    id="nextEventCard"
+    class="next-event-card"
+  >
+  </div>
+
+
+  <!-- =========================
+       ΠΡΟΣΘΗΚΗ ΣΤΟ ΗΜΕΡΟΛΟΓΙΟ
+       & ΠΡΟΣΘΗΚΗ ΣΤΗΝ ΑΦΕΤΗΡΙΑ
+       ========================= -->
+
+  <p>
+
+    <a
+      class="btn"
+      href="calendar.ics"
+      data-i18n="addCalendar"
+    >
+      📅 Προσθήκη στο Ημερολόγιο
+    </a>
+
+
+    <button
+      id="installBtn"
+      class="btn secondary"
+      type="button"
+      onclick="document.getElementById('installHelp').hidden=false"
+      data-i18n="addHome"
+    >
+      📱 Προσθήκη στην Αφετηρία
+    </button>
+
+  </p>
+
+
+  <!-- =========================
+       RADIO FLOGA
+       ========================= -->
+
+  <div class="radio-player">
+
+    <iframe
+      src="https://volticast.com/embed/radiofloga"
+      height="120"
+      frameborder="0"
+      scrolling="no"
+      allow="autoplay"
+    >
+    </iframe>
+
+  </div>
+
+
+  <!-- =========================
+       ΠΡΟΓΡΑΜΜΑ ΙΕΡΩΝ ΑΚΟΛΟΥΘΙΩΝ
+       ========================= -->
+
+  <div
+    class="schedule-title"
+    data-i18n="mainTitle"
+  >
+    Πρόγραμμα Ιερών Ακολουθιών
+  </div>
+
+
+  <!-- =========================
+       ΛΙΣΤΑ ΑΚΟΛΟΥΘΙΩΝ
+       ========================= -->
+
+  <ul id="events">
+  </ul>
+
+
+  <!-- =========================
+       ΠΑΡΑΘΥΡΟ
+       ΠΡΟΣΘΗΚΗ ΣΤΗΝ ΑΦΕΤΗΡΙΑ
+       ========================= -->
+
+  <div
+    id="installHelp"
+    class="install-help"
+    hidden
+  >
+
+    <div
+      class="install-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="installTitle"
+    >
+
+
+      <button
+        id="closeInstall"
+        class="install-close"
+        type="button"
+        aria-label="Κλείσιμο"
+        onclick="document.getElementById('installHelp').setAttribute('hidden','')"
+      >
+        ×
+      </button>
+
+
+      <div class="install-icon">
+        📱
+      </div>
+
+
+      <h2
+        id="installTitle"
+        data-i18n="addHome"
+      >
+        Προσθήκη στην Αφετηρία
+      </h2>
+
+
+      <p data-i18n="onIphone">
+        Στο iPhone:
+      </p>
+
+
+      <ol>
+
+        <li data-i18n-html="shareStep">
+          Πάτησε
+          <strong>Κοινοποίηση</strong>
+          ↗ στο Safari.
+        </li>
+
+
+        <li data-i18n-html="homeStep">
+          Επίλεξε
+          <strong>
+            «Προσθήκη στην Αφετηρία»
+          </strong>.
+        </li>
+
+
+        <li data-i18n-html="addStep">
+          Πάτησε
+          <strong>«Προσθήκη»</strong>.
+        </li>
+
+      </ol>
+
+
+      <button
+        id="closeInstall2"
+        class="btn"
+        type="button"
+        onclick="document.getElementById('installHelp').setAttribute('hidden','')"
+        data-i18n="ok"
+      >
+        Εντάξει
+      </button>
+
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       SCRIPT
+       ========================= -->
+
+  <script src="script.js?v=23"></script>
+
+
 </div>
 
-<script src="script.js?v=22"></script></div></body></html>
+</body>
+
+</html>
