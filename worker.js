@@ -1,6 +1,92 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+        /*
+     * =========================
+     * ΗΜΕΡΟΛΟΓΙΟ
+     * =========================
+     *
+     * Επιστρέφει πάντα την τελευταία
+     * έκδοση του calendar.ics.
+     *
+     * Δεν κρατάμε cache ώστε όταν
+     * αλλάζει το αρχείο στο GitHub
+     * να παίρνει αμέσως τις αλλαγές.
+     */
+
+    if (
+      request.method === "GET" &&
+      url.pathname === "/calendar"
+    ) {
+
+      try {
+
+        const calendarUrl =
+          `https://nikolaospra.github.io/calendar.ics?cacheBust=${Date.now()}`;
+
+        const response =
+          await fetch(calendarUrl);
+
+        if (!response.ok) {
+
+          return new Response(
+            "Δεν ήταν δυνατή η φόρτωση του ημερολογίου.",
+            {
+              status: 502
+            }
+          );
+
+        }
+
+        const calendar =
+          await response.text();
+
+        return new Response(
+          calendar,
+          {
+            status: 200,
+
+            headers: {
+
+              "content-type":
+                "text/calendar; charset=UTF-8",
+
+              "cache-control":
+                "no-store, no-cache, must-revalidate, max-age=0",
+
+              "pragma":
+                "no-cache",
+
+              "expires":
+                "0"
+
+            }
+
+          }
+        );
+
+      } catch (error) {
+
+        return new Response(
+          "Σφάλμα ημερολογίου: " +
+          (
+            error instanceof Error
+              ? error.message
+              : String(error)
+          ),
+          {
+            status: 500,
+
+            headers: {
+              "content-type":
+                "text/plain; charset=UTF-8"
+            }
+          }
+        );
+
+      }
+
+    }
 if (request.method === "GET" && url.pathname === "/saint-day") {
   try {
     const month = Number(url.searchParams.get("month"));
