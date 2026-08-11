@@ -123,7 +123,7 @@ DTSTAMP:20260807T192101Z
 DTSTART;TZID=Europe/Athens:20260816T070000
 DTEND;TZID=Europe/Athens:20260816T100000
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οία «Παναγία Πλατσανή»
+LOCATION:Ι.Ν. Αγίου Γεωργίου
 END:VEVENT
 BEGIN:VEVENT
 UID:cfd20bb2-a0b6-49e6-b8c0-3d780659bd48@oia
@@ -164,45 +164,5 @@ DTSTART;TZID=Europe/Athens:20260823T070000
 DTEND;TZID=Europe/Athens:20260823T100000
 SUMMARY:Όρθρος - Θεία Λειτουργία
 LOCATION:Παναγία Ακάθιστος
-END:VEVENT
-BEGIN:VEVENT
-UID:3a30c16b-3600-40e7-b5cc-588890cc67d8@oia
-DTSTAMP:20260811T224200Z
-DTSTART;TZID=Europe/Athens:20260826T1900
-DTEND;TZID=Europe/Athens:20260826T2000
-SUMMARY:Εσπερινός
-LOCATION:Ιερός Ναός Αγίου Φανουρίου (Μπαξέδες)
-END:VEVENT
-BEGIN:VEVENT
-UID:49a25f4d-907c-4e9f-b73a-405e30aef824@oia
-DTSTAMP:20260811T224200Z
-DTSTART;TZID=Europe/Athens:20260827T0715
-DTEND;TZID=Europe/Athens:20260827T0930
-SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ναός Ευαγγελισμού Θεοτόκου (Φοινικιά)
-END:VEVENT
-BEGIN:VEVENT
-UID:04cff50a-d4a8-49ea-84bc-00eeeb37beb8@oia
-DTSTAMP:20260811T224200Z
-DTSTART;TZID=Europe/Athens:20260828T0715
-DTEND;TZID=Europe/Athens:20260828T0930
-SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ναός Αγίου Φανουρίου (Μπαξέδες)
-END:VEVENT
-BEGIN:VEVENT
-UID:3610e02c-3e91-4419-8c0e-d5a38c9e6618@oia
-DTSTAMP:20260811T224200Z
-DTSTART;TZID=Europe/Athens:20260830T0700
-DTEND;TZID=Europe/Athens:20260830T1000
-SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οία «Παναγία Πλατσανή»
-END:VEVENT
-BEGIN:VEVENT
-UID:bf556e65-4bf1-4829-a44b-380b540d23b2@oia
-DTSTAMP:20260811T224200Z
-DTSTART;TZID=Europe/Athens:20260901T0715
-DTEND;TZID=Europe/Athens:20260901T0915
-SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οία «Παναγία Πλατσανή»
 END:VEVENT
 END:VCALENDAR
