@@ -17,7 +17,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
     const translations = {
       el: {
-        mainTitle: 'Πρόγραμμα Ιερών Ακολουθιών • Ενορία Οίας',
+        mainTitle: 'Ιερός ενοριακός ναός Παναγίας Ακαθίατου Ύμνου Οίας "Παναγία Πλατσανή" • Πρόγραμμα Ιερών Ακολουθιών',
         addCalendar: '📅 Προσθήκη στο Ημερολόγιο',
         addHome: '📱 Προσθήκη στην Αφετηρία',
         onIphone: 'Στο iPhone:',
