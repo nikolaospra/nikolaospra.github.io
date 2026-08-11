@@ -17,133 +17,500 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
     const translations = {
       el: {
-        mainTitle: 'Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οίας Παναγία Πλατσανή • Πρόγραμμα Ιερών Ακολουθιών',
-        addCalendar: '📅 Προσθήκη στο Ημερολόγιο',
-        addHome: '📱 Προσθήκη στην Αφετηρία',
-        onIphone: 'Στο iPhone:',
-        shareStep: 'Πάτησε <strong>Κοινοποίηση</strong> ↗ στο Safari.',
-        homeStep: 'Επίλεξε <strong>«Προσθήκη στην Αφετηρία»</strong>.',
-        addStep: 'Πάτησε <strong>«Προσθήκη»</strong>.',
-        ok: 'Εντάξει',
         nextService: '⛪️ ΕΠΟΜΕΝΗ ΑΚΟΛΟΥΘΙΑ',
         inProgress: 'Σε εξέλιξη',
         backToSchedule: '← Επιστροφή στο πρόγραμμα',
         calendarTitle: '✝️ Εορτολόγιο',
-        errorCalendar: 'Δεν ήταν δυνατή η φόρτωση του προγράμματος.',
-        weekdays: ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'],
-        hoursShort: 'ώρ.',
-        minutesShort: '΄',
-        dayOne: 'ημέρα',
-        dayMany: 'ημέρες'
+        errorCalendar:
+          'Δεν ήταν δυνατή η φόρτωση του προγράμματος.',
+        weekdays: [
+          'Κυριακή',
+          'Δευτέρα',
+          'Τρίτη',
+          'Τετάρτη',
+          'Πέμπτη',
+          'Παρασκευή',
+          'Σάββατο'
+        ],
+        day: 'ημέρα',
+        days: 'ημέρες',
+        hour: 'ώρ.',
+        minute: '΄'
       },
+
       en: {
-        mainTitle: 'Holy Services Schedule • Oia Parish',
-        addCalendar: '📅 Add to Calendar',
-        addHome: '📱 Add to Home Screen',
-        onIphone: 'On iPhone:',
-        shareStep: 'Tap <strong>Share</strong> ↗ in Safari.',
-        homeStep: 'Select <strong>“Add to Home Screen”</strong>.',
-        addStep: 'Tap <strong>“Add”</strong>.',
-        ok: 'Done',
         nextService: '⛪️ NEXT SERVICE',
         inProgress: 'In progress',
         backToSchedule: '← Back to schedule',
         calendarTitle: '✝️ Saints’ Calendar',
-        errorCalendar: 'The service schedule could not be loaded.',
-        weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-        hoursShort: 'hr.',
-        minutesShort: 'min.',
-        dayOne: 'day',
-        dayMany: 'days'
+        errorCalendar:
+          'The service schedule could not be loaded.',
+        weekdays: [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+        ],
+        day: 'day',
+        days: 'days',
+        hour: 'hr.',
+        minute: 'min.'
       }
     };
 
+
+    /*
+     * =========================
+     * ΜΕΤΑΦΡΑΣΕΙΣ ΑΚΟΛΟΥΘΙΩΝ
+     * =========================
+     */
+
     const serviceTranslations = {
-      'Όρθρος - Θεία Λειτουργία': 'Matins - Divine Liturgy',
-      'Εσπερινός': 'Vespers',
-      'Εσπερινός & Μεγάλη Παράκληση': 'Vespers & Great Paraklesis',
-      'Εσπερινός & Μικρή Παράκληση': 'Vespers & Small Paraklesis',
-      'Εσπερινός & Εγκώμια': 'Vespers & Lamentations',
-      'Λιτάνευση Επιταφίου': 'Epitaphios Procession'
+
+      'Όρθρος':
+        'Matins',
+
+      'Θεία Λειτουργία':
+        'Divine Liturgy',
+
+      'Όρθρος - Θεία Λειτουργία':
+        'Matins - Divine Liturgy',
+
+      'Όρθρος – Θεία Λειτουργία':
+        'Matins – Divine Liturgy',
+
+      'Εσπερινός':
+        'Vespers',
+
+      'Εσπερινός - Θεία Λειτουργία':
+        'Vespers - Divine Liturgy',
+
+      'Ιερά Παράκληση':
+        'Paraklesis Service',
+
+      'Ιερά Παράκληση στην Παναγία':
+        'Paraklesis Service to the Theotokos',
+
+      'Μικρή Παράκληση':
+        'Small Paraklesis',
+
+      'Μεγάλη Παράκληση':
+        'Great Paraklesis',
+
+      'Ακάθιστος Ύμνος':
+        'Akathist Hymn',
+
+      'Όρθρος - Αρχιερατική Θεία Λειτουργία':
+        'Matins - Hierarchical Divine Liturgy',
+
+      'Αγιασμός':
+        'Blessing of the Waters',
+
+      'Παράκληση':
+        'Paraklesis Service',
+
+      'Εγκώμια':
+        'Lamentations',
+
+      'Λιτάνευση':
+        'Procession',
+
+      'Λιτάνευση Επιταφίου':
+        'Epitaphios Procession'
     };
+
+
+    /*
+     * =========================
+     * ΜΕΤΑΦΡΑΣΕΙΣ ΝΑΩΝ
+     * =========================
+     */
+
+    const locationTranslations = {
+
+      'Ιερός Ναός Αγίου Γεωργίου':
+        'Holy Church of Saint George',
+
+      'Ιερός Ναός Αγίας Ματρώνας (Φοινικιά)':
+        'Holy Church of Saint Matrona (Finikia)',
+
+      'Ιερός Ναός Παναγίας Ακαθίστου Ύμνου Οίας':
+        'Holy Church of Panagia Akathistos Hymn, Oia',
+
+      'Ιερός Ναός Παναγίας Πλατσανής':
+        'Holy Church of Panagia Platsani',
+
+      'Παναγία Πλατσανή':
+        'Panagia Platsani',
+
+      'Άγιος Γεώργιος':
+        'Saint George',
+
+      'Αγία Ματρώνα (Φοινικιά)':
+        'Saint Matrona (Finikia)'
+    };
+
+
+    /*
+     * =========================
+     * ΕΠΙΛΟΓΗ ΓΛΩΣΣΑΣ
+     * =========================
+     */
 
     let currentLanguage =
       localStorage.getItem('oiaLanguage') ||
-      ((navigator.language || '').toLowerCase().startsWith('el') ? 'el' : 'en');
+      (
+        (navigator.language || '')
+          .toLowerCase()
+          .startsWith('el')
+          ? 'el'
+          : 'en'
+      );
+
 
     function t(key) {
-      return translations[currentLanguage][key] ??
+
+      return (
+        translations[currentLanguage][key] ??
         translations.el[key] ??
-        key;
+        key
+      );
     }
 
-    function translateService(text) {
-      if (currentLanguage === 'el') return text;
-      return serviceTranslations[text] || text;
-    }
 
-    function applyLanguage() {
-      document.documentElement.lang = currentLanguage;
+    /*
+     * =========================
+     * ΜΕΤΑΦΡΑΣΗ ΑΚΟΛΟΥΘΙΑΣ
+     * =========================
+     */
 
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.dataset.i18n;
-        if (translations[currentLanguage][key] !== undefined) {
-          el.textContent = translations[currentLanguage][key];
-        }
-      });
+    function translateService(value) {
 
-      document.querySelectorAll('[data-i18n-html]').forEach(el => {
-        const key = el.dataset.i18nHtml;
-        if (translations[currentLanguage][key] !== undefined) {
-          el.innerHTML = translations[currentLanguage][key];
-        }
-      });
-
-      const title = document.getElementById('pageTitle');
-      if (title) {
-        title.textContent =
-          currentLanguage === 'el'
-            ? 'Πρόγραμμα Ιερών Ακολουθιών • Ενορία Οίας'
-            : 'Holy Services Schedule • Oia Parish';
+      if (currentLanguage === 'el') {
+        return value;
       }
 
-      const elBtn = document.getElementById('langEl');
-      const enBtn = document.getElementById('langEn');
+      if (!value) {
+        return value;
+      }
 
-      if (elBtn) elBtn.classList.toggle('active', currentLanguage === 'el');
-      if (enBtn) enBtn.classList.toggle('active', currentLanguage === 'en');
+      if (serviceTranslations[value]) {
+        return serviceTranslations[value];
+      }
 
-      if (typeof renderProgram === 'function') {
+      let result = value;
+
+      const keys =
+        Object.keys(serviceTranslations)
+          .sort(
+            (a, b) =>
+              b.length - a.length
+          );
+
+      keys.forEach(greek => {
+
+        result =
+          result.replaceAll(
+            greek,
+            serviceTranslations[greek]
+          );
+      });
+
+      return result;
+    }
+
+
+    /*
+     * =========================
+     * ΜΕΤΑΦΡΑΣΗ ΤΟΠΟΘΕΣΙΑΣ
+     * =========================
+     */
+
+    function translateLocation(value) {
+
+      if (currentLanguage === 'el') {
+        return value;
+      }
+
+      if (!value) {
+        return value;
+      }
+
+      if (locationTranslations[value]) {
+        return locationTranslations[value];
+      }
+
+      let result = value;
+
+      const keys =
+        Object.keys(locationTranslations)
+          .sort(
+            (a, b) =>
+              b.length - a.length
+          );
+
+      keys.forEach(greek => {
+
+        result =
+          result.replaceAll(
+            greek,
+            locationTranslations[greek]
+          );
+      });
+
+      return result;
+    }
+
+
+    /*
+     * =========================
+     * ΑΛΛΑΓΗ ΓΛΩΣΣΑΣ
+     * =========================
+     */
+
+    function setLanguage(language) {
+
+      if (
+        language !== 'el' &&
+        language !== 'en'
+      ) {
+        return;
+      }
+
+      currentLanguage =
+        language;
+
+      localStorage.setItem(
+        'oiaLanguage',
+        language
+      );
+
+      document.documentElement.lang =
+        language;
+
+
+      const el =
+        document.getElementById(
+          'langEl'
+        );
+
+      const en =
+        document.getElementById(
+          'langEn'
+        );
+
+
+      if (el) {
+
+        el.classList.toggle(
+          'active',
+          language === 'el'
+        );
+      }
+
+
+      if (en) {
+
+        en.classList.toggle(
+          'active',
+          language === 'en'
+        );
+      }
+
+
+      /*
+       * Σταθερά κείμενα index.html
+       */
+
+      const fixedTexts = {
+
+        addCalendar: {
+
+          el:
+            '📅 Προσθήκη στο Ημερολόγιο',
+
+          en:
+            '📅 Add to Calendar'
+        },
+
+
+        addHome: {
+
+          el:
+            '📱 Προσθήκη στην Αφετηρία',
+
+          en:
+            '📱 Add to Home Screen'
+        },
+
+
+        onIphone: {
+
+          el:
+            'Στο iPhone:',
+
+          en:
+            'On iPhone:'
+        },
+
+
+        shareStep: {
+
+          el:
+            'Πάτησε <strong>Κοινοποίηση</strong> ↗ στο Safari.',
+
+          en:
+            'Tap <strong>Share</strong> ↗ in Safari.'
+        },
+
+
+        homeStep: {
+
+          el:
+            'Επίλεξε <strong>«Προσθήκη στην Αφετηρία»</strong>.',
+
+          en:
+            'Select <strong>"Add to Home Screen"</strong>.'
+        },
+
+
+        addStep: {
+
+          el:
+            'Πάτησε <strong>«Προσθήκη»</strong>.',
+
+          en:
+            'Tap <strong>"Add"</strong>.'
+        },
+
+
+        ok: {
+
+          el:
+            'Εντάξει',
+
+          en:
+            'Done'
+        }
+      };
+
+
+      Object.keys(fixedTexts)
+        .forEach(key => {
+
+          document
+            .querySelectorAll(
+              `[data-i18n="${key}"]`
+            )
+            .forEach(el => {
+
+              el.textContent =
+                fixedTexts[key][language];
+            });
+
+
+          document
+            .querySelectorAll(
+              `[data-i18n-html="${key}"]`
+            )
+            .forEach(el => {
+
+              el.innerHTML =
+                fixedTexts[key][language];
+            });
+
+        });
+
+
+      const title =
+        document.getElementById(
+          'pageTitle'
+        );
+
+
+      if (title) {
+
+        title.textContent =
+          language === 'el'
+            ? 'Ιερός ενοριακός ναός Παναγίας Ακαθίστου Ύμνου Οίας Παναγία Πλατσανή'
+            : 'Panagia Platsani Parish Church • Oia';
+      }
+
+
+      /*
+       * Ξαναζωγραφίζουμε το πρόγραμμα
+       * χωρίς refresh της σελίδας.
+       */
+
+      if (
+        typeof renderProgram ===
+        'function'
+      ) {
+
         renderProgram();
       }
     }
 
-    function setLanguage(language) {
-      if (language !== 'el' && language !== 'en') return;
-      currentLanguage = language;
-      localStorage.setItem('oiaLanguage', language);
-      applyLanguage();
-    }
 
-    document.getElementById('langEl')?.addEventListener('click', () => setLanguage('el'));
-    document.getElementById('langEn')?.addEventListener('click', () => setLanguage('en'));
+    /*
+     * ΚΟΥΜΠΙΑ ΓΛΩΣΣΑΣ
+     */
 
+    document
+      .getElementById('langEl')
+      ?.addEventListener(
+        'click',
+        () => setLanguage('el')
+      );
+
+
+    document
+      .getElementById('langEn')
+      ?.addEventListener(
+        'click',
+        () => setLanguage('en')
+      );
+
+
+    document.documentElement.lang =
+      currentLanguage;
+
+
+    /*
+     * =========================
+     * ΛΙΣΤΑ ΓΕΓΟΝΟΤΩΝ
+     * =========================
+     */
 
     const list =
-      document.getElementById('events');
+      document.getElementById(
+        'events'
+      );
+
 
     if (!list) {
+
       throw new Error(
         'Δεν βρέθηκε το στοιχείο events.'
       );
     }
+
+
+    list.innerHTML =
+      '';
+
 
     const blocks =
       ics.match(
         /BEGIN:VEVENT[\s\S]*?END:VEVENT/g
       ) || [];
 
+
     const events = [];
+
 
     /*
      * =========================
@@ -151,163 +518,196 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
      * =========================
      */
 
-    blocks.forEach(block => {
+    blocks.forEach(
+      block => {
 
-      const get = name => {
+        const get =
+          name => {
 
-        const m = block.match(
-          new RegExp(
-            '^' +
-            name +
-            '(?:;[^:]*)?:(.*)$',
-            'm'
-          )
-        );
+            const m =
+              block.match(
+                new RegExp(
+                  '^' +
+                  name +
+                  '(?:;[^:]*)?:(.*)$',
+                  'm'
+                )
+              );
 
-        return m
-          ? m[1].trim()
-          : '';
-      };
+            return m
+              ? m[1].trim()
+              : '';
+          };
 
-      const dt =
-        get('DTSTART');
 
-      const dtEnd =
-        get('DTEND');
+        const dt =
+          get('DTSTART');
 
-      const m =
-        dt.match(
-          /(\d{8})T(\d{4})/
-        );
 
-      const mEnd =
-        dtEnd.match(
-          /(\d{8})T(\d{4})/
-        );
+        const dtEnd =
+          get('DTEND');
 
-      if (!m) return;
 
-      /*
-       * =========================
-       * ΕΝΑΡΞΗ
-       * =========================
-       */
-
-      const year =
-        Number(
-          m[1].slice(0, 4)
-        );
-
-      const month =
-        Number(
-          m[1].slice(4, 6)
-        ) - 1;
-
-      const day =
-        Number(
-          m[1].slice(6, 8)
-        );
-
-      const hour =
-        Number(
-          m[2].slice(0, 2)
-        );
-
-      const minute =
-        Number(
-          m[2].slice(2, 4)
-        );
-
-      const dateObj =
-        new Date(
-          year,
-          month,
-          day,
-          hour,
-          minute
-        );
-
-      /*
-       * =========================
-       * ΛΗΞΗ
-       * =========================
-       */
-
-      let endObj = null;
-      let endTime = '';
-
-      if (mEnd) {
-
-        endObj =
-          new Date(
-            Number(
-              mEnd[1].slice(0, 4)
-            ),
-
-            Number(
-              mEnd[1].slice(4, 6)
-            ) - 1,
-
-            Number(
-              mEnd[1].slice(6, 8)
-            ),
-
-            Number(
-              mEnd[2].slice(0, 2)
-            ),
-
-            Number(
-              mEnd[2].slice(2, 4)
-            )
+        const m =
+          dt.match(
+            /(\d{8})T(\d{4})/
           );
 
-        endTime =
-          `${mEnd[2].slice(0, 2)}:` +
-          `${mEnd[2].slice(2, 4)}`;
+
+        const mEnd =
+          dtEnd.match(
+            /(\d{8})T(\d{4})/
+          );
+
+
+        if (!m) return;
+
+
+        /*
+         * =========================
+         * ΕΝΑΡΞΗ
+         * =========================
+         */
+
+        const year =
+          Number(
+            m[1].slice(0, 4)
+          );
+
+
+        const month =
+          Number(
+            m[1].slice(4, 6)
+          ) - 1;
+
+
+        const day =
+          Number(
+            m[1].slice(6, 8)
+          );
+
+
+        const hour =
+          Number(
+            m[2].slice(0, 2)
+          );
+
+
+        const minute =
+          Number(
+            m[2].slice(2, 4)
+          );
+
+
+        const dateObj =
+          new Date(
+            year,
+            month,
+            day,
+            hour,
+            minute
+          );
+
+
+        /*
+         * =========================
+         * ΛΗΞΗ
+         * =========================
+         */
+
+        let endObj =
+          null;
+
+
+        let endTime =
+          '';
+
+
+        if (mEnd) {
+
+          endObj =
+            new Date(
+
+              Number(
+                mEnd[1].slice(0, 4)
+              ),
+
+              Number(
+                mEnd[1].slice(4, 6)
+              ) - 1,
+
+              Number(
+                mEnd[1].slice(6, 8)
+              ),
+
+              Number(
+                mEnd[2].slice(0, 2)
+              ),
+
+              Number(
+                mEnd[2].slice(2, 4)
+              )
+            );
+
+
+          endTime =
+            `${mEnd[2].slice(0, 2)}:` +
+            `${mEnd[2].slice(2, 4)}`;
+        }
+
+
+        /*
+         * =========================
+         * ΗΜΕΡΑ
+         * =========================
+         */
+
+        const weekdays =
+          translations[
+            currentLanguage
+          ].weekdays;
+
+
+        const weekday =
+          weekdays[
+            dateObj.getDay()
+          ];
+
+
+        const date =
+          `${weekday} ` +
+          `${m[1].slice(6, 8)}/` +
+          `${m[1].slice(4, 6)}/` +
+          `${m[1].slice(0, 4)}`;
+
+
+        const time =
+          `${m[2].slice(0, 2)}:` +
+          `${m[2].slice(2, 4)}`;
+
+
+        events.push({
+
+          dateObj,
+
+          endObj,
+
+          date,
+
+          time,
+
+          endTime,
+
+          summary:
+            get('SUMMARY'),
+
+          location:
+            get('LOCATION')
+        });
+
       }
+    );
 
-      /*
-       * =========================
-       * ΗΜΕΡΑ
-       * =========================
-       */
-
-      const weekdays = translations[currentLanguage].weekdays;
-
-      const weekday =
-        weekdays[
-          dateObj.getDay()
-        ];
-
-      const date =
-        `${weekday} ` +
-        `${m[1].slice(6, 8)}/` +
-        `${m[1].slice(4, 6)}/` +
-        `${m[1].slice(0, 4)}`;
-
-      const time =
-        `${m[2].slice(0, 2)}:` +
-        `${m[2].slice(2, 4)}`;
-
-      events.push({
-
-        dateObj,
-
-        endObj,
-
-        date,
-
-        time,
-
-        endTime,
-
-        summary:
-          get('SUMMARY'),
-
-        location:
-          get('LOCATION')
-      });
-    });
 
     /*
      * =========================
@@ -345,9 +745,9 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         );
     }
 
+
     /*
      * =========================
-     * ΒΡΙΣΚΟΥΜΕ ΤΗΝ
      * ΤΡΕΧΟΥΣΑ / ΕΠΟΜΕΝΗ
      * =========================
      */
@@ -357,49 +757,67 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       const now =
         new Date();
 
+
       return events
-        .filter(event => {
 
-          /*
-           * Αν έχει DTEND,
-           * παραμένει μέχρι
-           * να τελειώσει.
-           */
+        .filter(
+          event => {
 
-          if (event.endObj) {
-            return event.endObj > now;
+            if (
+              event.endObj
+            ) {
+
+              return (
+                event.endObj >
+                now
+              );
+            }
+
+
+            return (
+              event.dateObj >=
+              now
+            );
           }
-
-          return event.dateObj >= now;
-        })
+        )
 
         .sort(
           (a, b) =>
-            a.dateObj - b.dateObj
+            a.dateObj -
+            b.dateObj
         )[0] || null;
     }
 
+
     /*
      * =========================
-     * ΜΟΝΑΔΙΚΟ ID ΓΕΓΟΝΟΤΟΣ
+     * EVENT KEY
      * =========================
      */
 
     function eventKey(event) {
 
       if (!event) {
+
         return 'none';
       }
 
+
       return [
+
         event.dateObj.getTime(),
+
         event.endObj
           ? event.endObj.getTime()
           : '',
+
         event.summary,
+
         event.location
+
       ].join('|');
     }
+
 
     /*
      * =========================
@@ -414,28 +832,35 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           '.container'
         );
 
+
       if (!container) return;
+
 
       container
         .querySelectorAll(
           ':scope > *'
         )
-        .forEach(el => {
+        .forEach(
+          el => {
 
-          el.dataset.calendarHidden =
-            'true';
+            el.dataset.calendarHidden =
+              'true';
 
-          el.style.display =
-            'none';
-        });
+            el.style.display =
+              'none';
+          }
+        );
+
 
       const page =
         document.createElement(
           'div'
         );
 
+
       page.id =
         'calendar-page';
+
 
       page.innerHTML = `
 
@@ -448,20 +873,26 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             ${t('backToSchedule')}
           </button>
 
+
           <div class="calendar-title">
             ${t('calendarTitle')}
           </div>
 
+
           <div class="calendar-date">
-            ${escapeHtml(event.date)}
+            ${escapeHtml(
+              event.date
+            )}
           </div>
 
         </div>
       `;
 
+
       container.appendChild(
         page
       );
+
 
       document
         .getElementById(
@@ -473,55 +904,71 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
             page.remove();
 
+
             container
               .querySelectorAll(
                 '[data-calendar-hidden="true"]'
               )
-              .forEach(el => {
+              .forEach(
+                el => {
 
-                el.style.display =
-                  '';
+                  el.style.display =
+                    '';
 
-                delete
-                  el.dataset
-                    .calendarHidden;
-              });
+                  delete
+                    el.dataset
+                      .calendarHidden;
+                }
+              );
           }
         );
 
+
       const saintMonth =
-        event.dateObj.getMonth() + 1;
+        event.dateObj
+          .getMonth() + 1;
+
 
       const saintDay =
-        event.dateObj.getDate();
+        event.dateObj
+          .getDate();
+
 
       const iframe =
         document.createElement(
           'iframe'
         );
 
+
       iframe.src =
         `https://oia-parish-admin.nikolaos-pra.workers.dev/saint-day?month=${saintMonth}&day=${saintDay}`;
+
 
       iframe.style.width =
         '100%';
 
+
       iframe.style.height =
         '75vh';
+
 
       iframe.style.border =
         '0';
 
+
       iframe.style.borderRadius =
         '18px';
 
+
       iframe.style.background =
         '#fff';
+
 
       page.appendChild(
         iframe
       );
     }
+
 
     /*
      * =========================
@@ -532,75 +979,115 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
     function countdownText(event) {
 
       if (!event) {
+
         return '';
       }
+
 
       const now =
         Date.now();
 
-      /*
-       * Η ακολουθία βρίσκεται
-       * ήδη σε εξέλιξη.
-       */
 
       if (
-        event.dateObj.getTime() <= now &&
+
+        event.dateObj.getTime()
+          <= now &&
+
         event.endObj &&
-        event.endObj.getTime() > now
+
+        event.endObj.getTime()
+          > now
+
       ) {
 
-        return t('inProgress');
+        return t(
+          'inProgress'
+        );
       }
+
 
       const difference =
         event.dateObj.getTime()
         - now;
 
+
       if (
         difference <= 0
       ) {
 
-        return t('inProgress');
+        return t(
+          'inProgress'
+        );
       }
+
 
       const totalMinutes =
         Math.floor(
-          difference / 60000
+          difference /
+          60000
         );
+
 
       const days =
         Math.floor(
-          totalMinutes / 1440
+          totalMinutes /
+          1440
         );
+
 
       const hours =
         Math.floor(
-          (totalMinutes % 1440) / 60
+          (
+            totalMinutes %
+            1440
+          ) / 60
         );
+
 
       const minutes =
-        totalMinutes % 60;
+        totalMinutes %
+        60;
 
-      if (days > 0) {
 
-        return (
-          currentLanguage === 'el'
-            ? `Σε ${days} ${days === 1 ? t('dayOne') : t('dayMany')} και ${hours} ${t('hoursShort')}`
-            : `In ${days} ${days === 1 ? t('dayOne') : t('dayMany')} and ${hours} ${t('hoursShort')}`
-        );
-      }
-
-      if (hours > 0) {
+      if (
+        days > 0
+      ) {
 
         return currentLanguage === 'el'
-          ? `Σε ${hours} ${t('hoursShort')} και ${minutes}${t('minutesShort')}`
-          : `In ${hours} ${t('hoursShort')} and ${minutes} ${t('minutesShort')}`;
+
+          ? `Σε ${days} ${
+              days === 1
+                ? t('day')
+                : t('days')
+            } και ${hours} ${t('hour')}`
+
+          : `In ${days} ${
+              days === 1
+                ? t('day')
+                : t('days')
+            } and ${hours} ${t('hour')}`;
       }
 
+
+      if (
+        hours > 0
+      ) {
+
+        return currentLanguage === 'el'
+
+          ? `Σε ${hours} ${t('hour')} και ${minutes}${t('minute')}`
+
+          : `In ${hours} ${t('hour')} and ${minutes} ${t('minute')}`;
+      }
+
+
       return currentLanguage === 'el'
-        ? `Σε ${minutes}${t('minutesShort')}`
-        : `In ${minutes} ${t('minutesShort')}`;
+
+        ? `Σε ${minutes}${t('minute')}`
+
+        : `In ${minutes} ${t('minute')}`;
     }
+
 
     /*
      * =========================
@@ -613,6 +1100,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       const nextEvent =
         getCurrentOrNextEvent();
 
+
       /*
        * =========================
        * ΜΕΓΑΛΗ ΚΑΡΤΑ
@@ -624,9 +1112,14 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           'nextEventCard'
         );
 
-      if (nextEventCard) {
 
-        if (!nextEvent) {
+      if (
+        nextEventCard
+      ) {
+
+        if (
+          !nextEvent
+        ) {
 
           nextEventCard.innerHTML =
             '';
@@ -636,10 +1129,9 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           let locationHtml =
             '';
 
+
           /*
-           * Η τοποθεσία εμφανίζεται
-           * απλά ως κείμενο.
-           * Χωρίς Google Maps.
+           * ΧΩΡΙΣ GOOGLE MAPS
            */
 
           if (
@@ -647,27 +1139,52 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           ) {
 
             locationHtml = `
-              <div class="next-card-location">
-                📍 ${escapeHtml(
-                  nextEvent.location
-                )}
+
+              <div
+                class="next-card-location"
+              >
+
+                📍 ${
+                  escapeHtml(
+                    translateLocation(
+                      nextEvent.location
+                    )
+                  )
+                }
+
               </div>
+
             `;
           }
 
+
           nextEventCard.innerHTML = `
 
-            <div class="next-card-label">
-              ${t('nextService')}
+            <div
+              class="next-card-label"
+            >
+
+              ${t(
+                'nextService'
+              )}
+
             </div>
 
-            <div class="next-card-date">
+
+            <div
+              class="next-card-date"
+            >
+
               ${escapeHtml(
                 nextEvent.date
               )}
+
             </div>
 
-            <div class="next-card-time">
+
+            <div
+              class="next-card-time"
+            >
 
               ${escapeHtml(
                 nextEvent.time
@@ -683,26 +1200,38 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
             </div>
 
-            <div class="next-card-title">
+
+            <div
+              class="next-card-title"
+            >
+
               ${escapeHtml(
-                nextEvent.summary
+                translateService(
+                  nextEvent.summary
+                )
               )}
+
             </div>
 
+
             ${locationHtml}
+
 
             <div
               id="nextCountdown"
               class="next-card-countdown"
             >
+
               ${countdownText(
                 nextEvent
               )}
+
             </div>
 
           `;
         }
       }
+
 
       /*
        * =========================
@@ -713,25 +1242,41 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       const now =
         new Date();
 
+
       const upcoming =
         events
 
-          .filter(event => {
+          .filter(
+            event => {
 
-            if (event.endObj) {
-              return event.endObj > now;
+              if (
+                event.endObj
+              ) {
+
+                return (
+                  event.endObj >
+                  now
+                );
+              }
+
+
+              return (
+                event.dateObj >=
+                now
+              );
             }
-
-            return event.dateObj >= now;
-          })
+          )
 
           .sort(
             (a, b) =>
-              a.dateObj - b.dateObj
+              a.dateObj -
+              b.dateObj
           );
+
 
       list.innerHTML =
         '';
+
 
       upcoming.forEach(
         event => {
@@ -741,8 +1286,10 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
               'li'
             );
 
+
           li.style.cursor =
             'pointer';
+
 
           /*
            * Πάτημα ακολουθίας
@@ -759,10 +1306,14 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             }
           );
 
+
           if (
+
             nextEvent &&
+
             eventKey(event) ===
             eventKey(nextEvent)
+
           ) {
 
             li.classList.add(
@@ -770,17 +1321,29 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             );
           }
 
+
+          /*
+           * ΗΜΕΡΟΜΗΝΙΑ / ΩΡΑ
+           */
+
           const strong =
             document.createElement(
               'strong'
             );
 
+
           strong.textContent =
             `${event.date} · ${event.time}`;
+
 
           li.appendChild(
             strong
           );
+
+
+          /*
+           * ΩΡΑ ΛΗΞΗΣ
+           */
 
           if (
             event.endTime
@@ -793,21 +1356,30 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
             );
           }
 
+
           li.appendChild(
             document.createElement(
               'br'
             )
           );
 
+
+          /*
+           * ΤΙΤΛΟΣ
+           */
+
           li.appendChild(
             document.createTextNode(
-              translateService(event.summary)
+              translateService(
+                event.summary
+              )
             )
           );
 
+
           /*
-           * Τοποθεσία
-           * χωρίς Maps.
+           * ΤΟΠΟΘΕΣΙΑ
+           * ΧΩΡΙΣ GOOGLE MAPS
            */
 
           if (
@@ -820,18 +1392,26 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
               )
             );
 
+
             const small =
               document.createElement(
                 'small'
               );
 
+
             small.textContent =
-              `📍 ${event.location}`;
+              `📍 ${
+                translateLocation(
+                  event.location
+                )
+              }`;
+
 
             li.appendChild(
               small
             );
           }
+
 
           list.appendChild(
             li
@@ -839,8 +1419,21 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         }
       );
 
+
       return nextEvent;
     }
+
+
+    /*
+     * =========================
+     * ΑΡΧΙΚΗ ΓΛΩΣΣΑ
+     * =========================
+     */
+
+    setLanguage(
+      currentLanguage
+    );
+
 
     /*
      * =========================
@@ -848,26 +1441,22 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
      * =========================
      */
 
-    applyLanguage();
-
     let displayedEventKey =
       eventKey(
         renderProgram()
       );
+
 
     /*
      * =========================
      * ΑΝΑΝΕΩΣΗ ΧΩΡΙΣ REFRESH
      * =========================
      *
-     * ΠΟΛΥ ΣΗΜΑΝΤΙΚΟ:
+     * Δεν χρησιμοποιούμε
+     * location.reload().
      *
-     * Δεν χρησιμοποιούμε:
-     *
-     * location.reload()
-     *
-     * Επομένως το iframe του
-     * RadioFloga ΔΕΝ καταστρέφεται.
+     * Έτσι το RadioFloga
+     * δεν διακόπτεται.
      */
 
     setInterval(
@@ -876,15 +1465,17 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
         const currentEvent =
           getCurrentOrNextEvent();
 
+
         const currentKey =
           eventKey(
             currentEvent
           );
 
+
         /*
-         * Μόνο όταν αλλάξει
-         * η τρέχουσα/επόμενη
-         * ακολουθία ξαναζωγραφίζουμε
+         * Αν άλλαξε η τρέχουσα /
+         * επόμενη ακολουθία,
+         * ξαναζωγραφίζουμε
          * το πρόγραμμα.
          */
 
@@ -896,18 +1487,20 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
           displayedEventKey =
             currentKey;
 
+
           renderProgram();
         }
 
+
         /*
-         * Ενημέρωση αντίστροφης
-         * μέτρησης κάθε δευτερόλεπτο.
+         * Ενημέρωση countdown
          */
 
         const countdown =
           document.getElementById(
             'nextCountdown'
           );
+
 
         if (
           countdown &&
@@ -926,20 +1519,28 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
 
   })
 
-  .catch(err => {
 
-    const list =
-      document.getElementById(
-        'events'
+  .catch(
+    err => {
+
+      const list =
+        document.getElementById(
+          'events'
+        );
+
+
+      if (list) {
+
+        list.textContent =
+          translations[
+            currentLanguage
+          ].errorCalendar;
+      }
+
+
+      console.error(
+        'CALENDAR ERROR:',
+        err
       );
-
-    if (list) {
-
-      list.textContent = t('errorCalendar');
     }
-
-    console.error(
-      'CALENDAR ERROR:',
-      err
-    );
-  });
+  );
