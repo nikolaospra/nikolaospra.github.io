@@ -564,10 +564,9 @@ export default {
 
 
         return htmlResponse(
-          adminPage(),
-          200
-        );
-      }
+  "<h1 style='font-family:sans-serif;text-align:center;margin-top:80px'>LOGIN OK</h1>",
+  200
+);
 
 
       /*
