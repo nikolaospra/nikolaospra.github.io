@@ -1,131 +1,69 @@
 export default {
   async fetch(request, env) {
-
     const url = new URL(request.url);
 
+    try {
 
-    /*
-     * =========================
-     * ΑΝΑΚΟΙΝΩΣΕΙΣ - ΔΗΜΟΣΙΑ
-     * =========================
-     *
-     * Η ιστοσελίδα ζητά:
-     * /announcements
-     *
-     * και παίρνει τις ανακοινώσεις
-     * από το KV OIA_ANNOUNCEMENTS.
-     */
+      /*
+       * =====================================================
+       * CORS
+       * =====================================================
+       */
 
-    if (
-      request.method === "GET" &&
-      url.pathname === "/announcements"
-    ) {
+      const corsHeaders = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      };
 
-      try {
 
-        const stored =
-          await env.OIA_ANNOUNCEMENTS.get("latest");
+      /*
+       * =====================================================
+       * OPTIONS
+       * =====================================================
+       */
 
-        let announcements = [];
-
-        if (stored) {
-
-          try {
-
-            announcements =
-              JSON.parse(stored);
-
-            if (!Array.isArray(announcements)) {
-              announcements = [];
-            }
-
-          } catch {
-
-            announcements = [];
-
-          }
-
-        }
-
-        return new Response(
-          JSON.stringify({
-            announcements
-          }),
-          {
-            status: 200,
-
-            headers: {
-              "content-type":
-                "application/json; charset=UTF-8",
-
-              "cache-control":
-                "no-store, no-cache, must-revalidate, max-age=0",
-
-              "pragma":
-                "no-cache",
-
-              "expires":
-                "0",
-
-              "Access-Control-Allow-Origin":
-                "*"
-            }
-          }
-        );
-
-      } catch (error) {
-
-        return new Response(
-          JSON.stringify({
-            announcements: [],
-            error:
-              error instanceof Error
-                ? error.message
-                : String(error)
-          }),
-          {
-            status: 500,
-
-            headers: {
-              "content-type":
-                "application/json; charset=UTF-8"
-            }
-          }
-        );
-
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: corsHeaders
+        });
       }
 
-    }
 
+      /*
+       * =====================================================
+       * CALENDAR
+       * =====================================================
+       */
 
-    /*
-     * =========================
-     * ΗΜΕΡΟΛΟΓΙΟ
-     * =========================
-     */
-
-    if (
-      request.method === "GET" &&
-      url.pathname === "/calendar"
-    ) {
-
-      try {
+      if (
+        request.method === "GET" &&
+        url.pathname === "/calendar"
+      ) {
 
         const calendarUrl =
-          `https://nikolaospra.github.io/calendar.ics?cacheBust=${Date.now()}`;
+          "https://nikolaospra.github.io/calendar.ics?cacheBust=" +
+          Date.now();
 
         const response =
-          await fetch(calendarUrl);
+          await fetch(calendarUrl, {
+            cache: "no-store"
+          });
 
         if (!response.ok) {
-
           return new Response(
             "Δεν ήταν δυνατή η φόρτωση του ημερολογίου.",
             {
-              status: 502
+              status: 502,
+              headers: {
+                "content-type":
+                  "text/plain; charset=UTF-8",
+                "cache-control": "no-store",
+                ...corsHeaders
+              }
             }
           );
-
         }
 
         const calendar =
@@ -135,62 +73,30 @@ export default {
           calendar,
           {
             status: 200,
-
             headers: {
-
               "content-type":
                 "text/calendar; charset=UTF-8",
-
               "cache-control":
                 "no-store, no-cache, must-revalidate, max-age=0",
-
-              "pragma":
-                "no-cache",
-
-              "expires":
-                "0"
-
-            }
-
-          }
-        );
-
-      } catch (error) {
-
-        return new Response(
-          "Σφάλμα ημερολογίου: " +
-          (
-            error instanceof Error
-              ? error.message
-              : String(error)
-          ),
-          {
-            status: 500,
-
-            headers: {
-              "content-type":
-                "text/plain; charset=UTF-8"
+              "pragma": "no-cache",
+              "expires": "0",
+              ...corsHeaders
             }
           }
         );
-
       }
 
-    }
 
+      /*
+       * =====================================================
+       * SAINT DAY / ΕΟΡΤΟΛΟΓΙΟ
+       * =====================================================
+       */
 
-    /*
-     * =========================
-     * ΕΟΡΤΟΛΟΓΙΟ
-     * =========================
-     */
-
-    if (
-      request.method === "GET" &&
-      url.pathname === "/saint-day"
-    ) {
-
-      try {
+      if (
+        request.method === "GET" &&
+        url.pathname === "/saint-day"
+      ) {
 
         const month =
           Number(
@@ -215,10 +121,13 @@ export default {
           return new Response(
             "Μη έγκυρη ημερομηνία.",
             {
-              status: 400
+              status: 400,
+              headers: {
+                "content-type":
+                  "text/plain; charset=UTF-8"
+              }
             }
           );
-
         }
 
 
@@ -230,7 +139,11 @@ export default {
 
 
         const saintUrl =
-          `https://www.saint.gr/${mm}/${dd}/index.aspx`;
+          "https://www.saint.gr/" +
+          mm +
+          "/" +
+          dd +
+          "/index.aspx";
 
 
         const response =
@@ -242,10 +155,13 @@ export default {
           return new Response(
             "Δεν ήταν δυνατή η φόρτωση του εορτολογίου.",
             {
-              status: 502
+              status: 502,
+              headers: {
+                "content-type":
+                  "text/plain; charset=UTF-8"
+              }
             }
           );
-
         }
 
 
@@ -264,59 +180,133 @@ export default {
           html,
           {
             status: 200,
-
             headers: {
-
               "content-type":
                 "text/html; charset=UTF-8",
-
               "cache-control":
                 "no-store"
-
-            }
-
-          }
-        );
-
-      } catch (error) {
-
-        return new Response(
-          "Σφάλμα εορτολογίου: " +
-          (
-            error instanceof Error
-              ? error.message
-              : String(error)
-          ),
-          {
-            status: 500,
-
-            headers: {
-              "content-type":
-                "text/plain; charset=UTF-8"
             }
           }
         );
-
       }
 
-    }
+
+      /*
+       * =====================================================
+       * ANNOUNCEMENTS / ΑΝΑΚΟΙΝΩΣΕΙΣ
+       *
+       * Διαβάζει τα entries από το KV namespace
+       * ANNOUNCEMENTS.
+       * =====================================================
+       */
+
+      if (
+        request.method === "GET" &&
+        url.pathname === "/announcements"
+      ) {
+
+        if (!env.ANNOUNCEMENTS) {
+
+          return new Response(
+            JSON.stringify({
+              announcements: []
+            }),
+            {
+              status: 200,
+              headers: {
+                "content-type":
+                  "application/json; charset=UTF-8",
+                "cache-control":
+                  "no-store",
+                ...corsHeaders
+              }
+            }
+          );
+        }
 
 
-    /*
-     * =========================
-     * ΑΝΑΛΥΣΗ ΠΡΟΓΡΑΜΜΑΤΟΣ
-     * =========================
-     */
+        const listed =
+          await env.ANNOUNCEMENTS.list({
+            limit: 100
+          });
 
-    if (
-      request.method === "POST" &&
-      url.pathname === "/analyze"
-    ) {
 
-      try {
+        const announcements = [];
+
+
+        for (
+          const key of listed.keys
+        ) {
+
+          const value =
+            await env.ANNOUNCEMENTS.get(
+              key.name
+            );
+
+
+          if (value !== null) {
+
+            announcements.push({
+              key: key.name,
+              value: value
+            });
+
+          }
+
+        }
+
+
+        return new Response(
+          JSON.stringify({
+            announcements
+          }),
+          {
+            status: 200,
+            headers: {
+              "content-type":
+                "application/json; charset=UTF-8",
+              "cache-control":
+                "no-store",
+              ...corsHeaders
+            }
+          }
+        );
+      }
+
+
+      /*
+       * =====================================================
+       * ANALYZE
+       * =====================================================
+       */
+
+      if (
+        request.method === "POST" &&
+        url.pathname === "/analyze"
+      ) {
+
+        if (!env.AI) {
+
+          return new Response(
+            JSON.stringify({
+              error:
+                "Δεν έχει συνδεθεί το Workers AI binding."
+            }),
+            {
+              status: 500,
+              headers: {
+                "content-type":
+                  "application/json; charset=UTF-8",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
 
         const form =
           await request.formData();
+
 
         const file =
           form.get("file");
@@ -334,14 +324,43 @@ export default {
             }),
             {
               status: 400,
-
               headers: {
                 "content-type":
-                  "application/json; charset=UTF-8"
+                  "application/json; charset=UTF-8",
+                ...corsHeaders
               }
             }
           );
+        }
 
+
+        const contentType =
+          file.type || "image/jpeg";
+
+
+        /*
+         * Το LLaVA εδώ χρησιμοποιείται
+         * για εικόνες.
+         */
+
+        if (
+          !contentType.startsWith("image/")
+        ) {
+
+          return new Response(
+            JSON.stringify({
+              error:
+                "Προς το παρόν υποστηρίζονται μόνο φωτογραφίες JPG/PNG."
+            }),
+            {
+              status: 400,
+              headers: {
+                "content-type":
+                  "application/json; charset=UTF-8",
+                ...corsHeaders
+              }
+            }
+          );
         }
 
 
@@ -355,10 +374,12 @@ export default {
           await env.AI.run(
             "@cf/llava-hf/llava-1.5-7b-hf",
             {
-              image: [...bytes],
+              image: [
+                ...bytes
+              ],
 
-              prompt: `Διάβασε προσεκτικά αυτή τη φωτογραφία με το πρόγραμμα
-των ιερών Ακολουθιών της ενορίας.
+              prompt:
+                `Διάβασε προσεκτικά αυτή τη φωτογραφία με το πρόγραμμα των ιερών Ακολουθιών της ενορίας.
 
 Εξήγαγε ΟΛΕΣ τις ακολουθίες που εμφανίζονται.
 
@@ -370,7 +391,7 @@ export default {
 
 Απάντησε ΜΟΝΟ με έγκυρο JSON.
 Μην γράψεις markdown.
-Μην γράψεις \`\`\`json.
+Μην γράψεις code fences.
 Μην γράψεις κανένα άλλο κείμενο.
 
 Η ακριβής μορφή πρέπει να είναι:
@@ -386,7 +407,9 @@ export default {
   ]
 }
 
-Μην παραλείψεις καμία ακολουθία.`
+Μην παραλείψεις καμία ακολουθία.`,
+
+              max_tokens: 1024
             }
           );
 
@@ -412,20 +435,28 @@ export default {
         } else {
 
           text =
-            JSON.stringify(aiResult);
-
+            JSON.stringify(
+              aiResult
+            );
         }
 
 
         text =
           text
-            .replace(/```json/gi, "")
-            .replace(/```/g, "")
+            .replace(
+              /```json/gi,
+              ""
+            )
+            .replace(
+              /```/g,
+              ""
+            )
             .trim();
 
 
         const start =
           text.indexOf("{");
+
 
         const end =
           text.lastIndexOf("}");
@@ -442,7 +473,6 @@ export default {
               start,
               end + 1
             );
-
         }
 
 
@@ -467,616 +497,206 @@ export default {
         return new Response(
           JSON.stringify(parsed),
           {
+            status: 200,
             headers: {
-
               "content-type":
                 "application/json; charset=UTF-8",
-
               "cache-control":
-                "no-store"
-
+                "no-store",
+              ...corsHeaders
             }
           }
         );
-
-
-      } catch (error) {
-
-        return new Response(
-          JSON.stringify({
-            error:
-              error instanceof Error
-                ? error.message
-                : String(error)
-          }),
-          {
-            status: 500,
-
-            headers: {
-              "content-type":
-                "application/json; charset=UTF-8"
-            }
-          }
-        );
-
       }
-
-    }
-
-
-    /*
-     * =========================
-     * LOGIN
-     * =========================
-     */
-
-    if (request.method === "POST" && url.pathname === "/login") {
-  try {
-    const form = await request.formData();
-    const password = String(form.get("password") || "");
-
-    if (!env.ADMIN_PASSWORD) {
-      return htmlResponse(
-        loginPage("Δεν έχει οριστεί ADMIN_PASSWORD στο Worker."),
-        500
-      );
-    }
-
-    if (password !== env.ADMIN_PASSWORD) {
-      return htmlResponse(
-        loginPage("Λάθος κωδικός."),
-        401
-      );
-    }
-
-    return htmlResponse(adminPage());
-
-  } catch (error) {
-
-    return new Response(
-      `
-      <!doctype html>
-      <html lang="el">
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Σφάλμα Worker</title>
-        <style>
-          body{
-            margin:0;
-            padding:30px 18px;
-            background:#f5f1ec;
-            color:#4b2020;
-            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-          }
-
-          .box{
-            max-width:650px;
-            margin:auto;
-            background:#fff;
-            border-radius:24px;
-            padding:25px;
-            box-shadow:0 12px 35px rgba(60,20,20,.12);
-          }
-
-          h1{
-            margin-top:0;
-          }
-
-          pre{
-            white-space:pre-wrap;
-            word-break:break-word;
-            background:#f5f1ec;
-            padding:15px;
-            border-radius:14px;
-          }
-        </style>
-      </head>
-
-      <body>
-
-        <div class="box">
-
-          <h1>⚠️ Σφάλμα Worker</h1>
-
-          <p>
-            Το σφάλμα παρουσιάστηκε κατά το άνοιγμα
-            της σελίδας διαχείρισης.
-          </p>
-
-          <pre>${escapeHtml(
-            error instanceof Error
-              ? error.stack || error.message
-              : String(error)
-          )}</pre>
-
-        </div>
-
-      </body>
-      </html>
-      `,
-      {
-        status: 500,
-        headers: {
-          "content-type":
-            "text/html; charset=UTF-8",
-          "cache-control":
-            "no-store"
-        }
-      }
-    );
-  }
-}
 
 
       /*
-       * Δημιουργούμε προσωρινό
-       * session token.
+       * =====================================================
+       * LOGIN PAGE
+       * =====================================================
        */
 
-      const token =
-        crypto.randomUUID();
+      if (
+        request.method === "GET" &&
+        url.pathname === "/"
+      ) {
+
+        return htmlResponse(
+          loginPage(),
+          200
+        );
+      }
 
 
-      await env.OIA_ANNOUNCEMENTS.put(
-        `session:${token}`,
-        "1",
-        {
-          expirationTtl: 86400
+      /*
+       * =====================================================
+       * LOGIN
+       * =====================================================
+       */
+
+      if (
+        request.method === "POST" &&
+        url.pathname === "/login"
+      ) {
+
+        const form =
+          await request.formData();
+
+
+        const password =
+          String(
+            form.get("password") || ""
+          );
+
+
+        if (
+          !env.ADMIN_PASSWORD ||
+          password !== env.ADMIN_PASSWORD
+        ) {
+
+          return htmlResponse(
+            loginPage(
+              "Λάθος κωδικός."
+            ),
+            401
+          );
         }
+
+
+        return htmlResponse(
+          adminPage(),
+          200
+        );
+      }
+
+
+      /*
+       * =====================================================
+       * NOT FOUND
+       * =====================================================
+       */
+
+      return new Response(
+        "Not Found",
+        {
+          status: 404,
+          headers: {
+            "content-type":
+              "text/plain; charset=UTF-8"
+          }
+        }
+      );
+
+    } catch (error) {
+
+      /*
+       * =====================================================
+       * ΚΡΙΣΙΜΟ:
+       * Δεν αφήνουμε πλέον το Worker να πετάξει
+       * Error 1101 χωρίς μήνυμα.
+       * =====================================================
+       */
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : String(error);
+
+
+      console.error(
+        "WORKER EXCEPTION:",
+        error
       );
 
 
       return new Response(
-        adminPage(),
+        `Worker error:
+
+${message}`,
         {
-          status: 200,
-
+          status: 500,
           headers: {
-
             "content-type":
-              "text/html; charset=UTF-8",
-
+              "text/plain; charset=UTF-8",
             "cache-control":
-              "no-store",
-
-            "Set-Cookie":
-              `oia_admin=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`
-
+              "no-store"
           }
         }
       );
-
     }
-
-
-    /*
-     * =========================
-     * ΑΠΟΘΗΚΕΥΣΗ ΑΝΑΚΟΙΝΩΣΗΣ
-     * =========================
-     */
-
-    if (
-      request.method === "POST" &&
-      url.pathname === "/announcements"
-    ) {
-
-      const authorized =
-        await checkAdminSession(
-          request,
-          env
-        );
-
-
-      if (!authorized) {
-
-        return new Response(
-          JSON.stringify({
-            error:
-              "Δεν υπάρχει ενεργή σύνδεση διαχείρισης."
-          }),
-          {
-            status: 401,
-
-            headers: {
-              "content-type":
-                "application/json; charset=UTF-8"
-            }
-          }
-        );
-
-      }
-
-
-      try {
-
-        const body =
-          await request.json();
-
-
-        const text =
-          String(
-            body.text || ""
-          ).trim();
-
-
-        if (!text) {
-
-          return new Response(
-            JSON.stringify({
-              error:
-                "Η ανακοίνωση είναι κενή."
-            }),
-            {
-              status: 400,
-
-              headers: {
-                "content-type":
-                  "application/json; charset=UTF-8"
-              }
-            }
-          );
-
-        }
-
-
-        let announcements =
-          await getAnnouncements(
-            env
-          );
-
-
-        const announcement = {
-
-          id:
-            crypto.randomUUID(),
-
-          date:
-            new Date().toLocaleDateString(
-              "el-GR"
-            ),
-
-          text
-
-        };
-
-
-        announcements.unshift(
-          announcement
-        );
-
-
-        /*
-         * Κρατάμε τις τελευταίες
-         * 20 ανακοινώσεις.
-         */
-
-        announcements =
-          announcements.slice(
-            0,
-            20
-          );
-
-
-        await saveAnnouncements(
-          env,
-          announcements
-        );
-
-
-        return jsonResponse({
-          success: true,
-          announcements
-        });
-
-
-      } catch (error) {
-
-        return jsonResponse(
-          {
-            error:
-              error instanceof Error
-                ? error.message
-                : String(error)
-          },
-          500
-        );
-
-      }
-
-    }
-
-
-    /*
-     * =========================
-     * ΔΙΑΓΡΑΦΗ ΑΝΑΚΟΙΝΩΣΗΣ
-     * =========================
-     */
-
-    if (
-      request.method === "DELETE" &&
-      url.pathname === "/announcements"
-    ) {
-
-      const authorized =
-        await checkAdminSession(
-          request,
-          env
-        );
-
-
-      if (!authorized) {
-
-        return jsonResponse(
-          {
-            error:
-              "Δεν υπάρχει ενεργή σύνδεση διαχείρισης."
-          },
-          401
-        );
-
-      }
-
-
-      try {
-
-        const body =
-          await request.json();
-
-
-        const id =
-          String(
-            body.id || ""
-          );
-
-
-        let announcements =
-          await getAnnouncements(
-            env
-          );
-
-
-        announcements =
-          announcements.filter(
-            item =>
-              String(item.id) !== id
-          );
-
-
-        await saveAnnouncements(
-          env,
-          announcements
-        );
-
-
-        return jsonResponse({
-          success: true,
-          announcements
-        });
-
-
-      } catch (error) {
-
-        return jsonResponse(
-          {
-            error:
-              error instanceof Error
-                ? error.message
-                : String(error)
-          },
-          500
-        );
-
-      }
-
-    }
-
-
-    /*
-     * =========================
-     * ΓΕΝΙΚΗ GET
-     * =========================
-     */
-
-    if (
-      request.method === "GET"
-    ) {
-
-      return htmlResponse(
-        loginPage()
-      );
-
-    }
-
-
-    return new Response(
-      "Not Found",
-      {
-        status: 404
-      }
-    );
-
   }
 };
 
 
 /*
- * =========================
- * ΑΝΑΚΟΙΝΩΣΕΙΣ
- * ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ
- * =========================
- */
-
-async function getAnnouncements(env) {
-
-  const stored =
-    await env.OIA_ANNOUNCEMENTS.get(
-      "latest"
-    );
-
-
-  if (!stored) {
-    return [];
-  }
-
-
-  try {
-
-    const parsed =
-      JSON.parse(stored);
-
-
-    return Array.isArray(parsed)
-      ? parsed
-      : [];
-
-  } catch {
-
-    return [];
-
-  }
-
-}
-
-
-async function saveAnnouncements(
-  env,
-  announcements
-) {
-
-  await env.OIA_ANNOUNCEMENTS.put(
-    "latest",
-    JSON.stringify(
-      announcements
-    )
-  );
-
-}
-
-
-async function checkAdminSession(
-  request,
-  env
-) {
-
-  const cookie =
-    request.headers.get(
-      "Cookie"
-    ) || "";
-
-
-  const match =
-    cookie.match(
-      /(?:^|;\s*)oia_admin=([^;]+)/
-    );
-
-
-  if (!match) {
-    return false;
-  }
-
-
-  const token =
-    match[1];
-
-
-  if (!token) {
-    return false;
-  }
-
-
-  const session =
-    await env.OIA_ANNOUNCEMENTS.get(
-      `session:${token}`
-    );
-
-
-  return session === "1";
-
-}
-
-
-/*
- * =========================
- * JSON RESPONSE
- * =========================
- */
-
-function jsonResponse(
-  body,
-  status = 200
-) {
-
-  return new Response(
-    JSON.stringify(body),
-    {
-      status,
-
-      headers: {
-        "content-type":
-          "application/json; charset=UTF-8",
-
-        "cache-control":
-          "no-store"
-      }
-    }
-  );
-
-}
-
-
-/*
- * =========================
+ * =========================================================
  * HTML RESPONSE
- * =========================
+ * =========================================================
  */
 
 function htmlResponse(
   body,
-  status = 200,
-  extraHeaders = {}
+  status = 200
 ) {
 
   return new Response(
     body,
     {
       status,
-
       headers: {
         "content-type":
           "text/html; charset=UTF-8",
-
         "cache-control":
-          "no-store",
-
-        ...extraHeaders
+          "no-store"
       }
     }
   );
+}
 
-}
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
 
 /*
- * =========================
- * LOGIN PAGE
- * =========================
+ * =========================================================
+ * ESCAPE HTML
+ * =========================================================
  */
+
 function escapeHtml(value) {
+
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 }
+
+
+/*
+ * =========================================================
+ * LOGIN PAGE
+ * =========================================================
+ */
+
 function loginPage(
   error = ""
 ) {
@@ -1096,7 +716,7 @@ function loginPage(
 
 <meta
   name="theme-color"
-  content="#6f2929"
+  content="#641f24"
 >
 
 <title>
@@ -1106,92 +726,184 @@ function loginPage(
 <style>
 
 *{
-  box-sizing:border-box
+  box-sizing:border-box;
 }
 
 body{
   margin:0;
-  background:#f5f1ec;
-  color:#4b2020;
+
+  min-height:100vh;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fffaf3 0%,
+      #f5eee5 100%
+    );
+
+  color:#2f2925;
+
   font-family:
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif
+    "SF Pro Display",
+    "SF Pro Text",
+    system-ui,
+    sans-serif;
+
+  -webkit-font-smoothing:antialiased;
 }
 
 .wrap{
-  max-width:560px;
-  margin:auto;
-  padding:42px 18px
+  width:
+    calc(100% - 28px);
+
+  max-width:
+    560px;
+
+  margin:
+    0 auto;
+
+  padding:
+    40px 0;
 }
 
 .card{
   background:#fff;
-  border-radius:26px;
-  padding:30px 24px;
+
+  border:
+    1px solid #e5d9c8;
+
+  border-radius:
+    28px;
+
+  padding:
+    30px 22px;
+
   box-shadow:
-    0 12px 35px rgba(60,20,20,.10)
+    0 14px 35px
+    rgba(55,38,25,.12);
+
+  text-align:center;
 }
 
 .icon{
-  width:74px;
-  height:74px;
-  margin:0 auto 18px;
-  border-radius:22px;
-  background:#f1e4df;
+  width:76px;
+
+  height:76px;
+
+  margin:
+    0 auto 18px;
+
   display:grid;
+
   place-items:center;
-  font-size:36px
+
+  border-radius:
+    23px;
+
+  background:
+    #f3e8df;
+
+  font-size:36px;
 }
 
 h1{
-  text-align:center;
-  font-size:27px;
-  margin:0 0 8px
+  margin:
+    0 0 8px;
+
+  color:#641f24;
+
+  font-size:28px;
+
+  font-weight:800;
 }
 
 .sub{
-  text-align:center;
-  color:#777;
-  line-height:1.45;
-  margin-bottom:28px
+  margin:
+    0 0 28px;
+
+  color:#756d65;
+
+  line-height:1.5;
 }
 
 label{
   display:block;
-  font-weight:600;
-  margin:0 0 8px
+
+  margin:
+    0 0 8px;
+
+  text-align:left;
+
+  color:#2f2925;
+
+  font-weight:700;
 }
 
 input[type=password]{
   width:100%;
-  padding:16px;
-  border:1px solid #ddd;
-  border-radius:13px;
+
+  padding:
+    16px;
+
+  border:
+    1px solid #dfd3c5;
+
+  border-radius:
+    15px;
+
+  background:#fff;
+
+  color:#2f2925;
+
   font-size:17px;
-  outline:none
+
+  outline:none;
+}
+
+input[type=password]:focus{
+  border-color:#b99752;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(185,151,82,.16);
 }
 
 button{
   width:100%;
+
   margin-top:15px;
+
   padding:16px;
+
   border:0;
-  border-radius:13px;
-  background:#702727;
+
+  border-radius:15px;
+
+  background:#641f24;
+
   color:#fff;
+
   font-size:17px;
-  font-weight:700
+
+  font-weight:800;
+
+  cursor:pointer;
 }
 
 .error{
+  margin-bottom:18px;
+
+  padding:13px;
+
+  border-radius:14px;
+
   background:#ffe7e7;
+
   color:#a00000;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:16px;
-  text-align:center
+
+  font-weight:700;
 }
 
 </style>
@@ -1252,14 +964,13 @@ ${
 </body>
 
 </html>`;
-
 }
 
 
 /*
- * =========================
+ * =========================================================
  * ADMIN PAGE
- * =========================
+ * =========================================================
  */
 
 function adminPage() {
@@ -1279,7 +990,7 @@ function adminPage() {
 
 <meta
   name="theme-color"
-  content="#6f2929"
+  content="#641f24"
 >
 
 <title>
@@ -1289,207 +1000,247 @@ function adminPage() {
 <style>
 
 *{
-  box-sizing:border-box
+  box-sizing:border-box;
 }
 
 body{
   margin:0;
-  background:#f5f1ec;
-  color:#4b2020;
+
+  min-height:100vh;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fffaf3 0%,
+      #f5eee5 100%
+    );
+
+  color:#2f2925;
+
   font-family:
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif
+    "SF Pro Display",
+    "SF Pro Text",
+    system-ui,
+    sans-serif;
+
+  -webkit-font-smoothing:antialiased;
 }
 
 .wrap{
-  max-width:650px;
-  margin:auto;
-  padding:25px 16px 45px
+  width:
+    calc(100% - 28px);
+
+  max-width:
+    650px;
+
+  margin:
+    0 auto;
+
+  padding:
+    28px 0 45px;
 }
 
 .card{
   background:#fff;
-  border-radius:26px;
-  padding:25px 20px;
+
+  border:
+    1px solid #e5d9c8;
+
+  border-radius:
+    28px;
+
+  padding:
+    25px 20px;
+
   box-shadow:
-    0 12px 35px rgba(60,20,20,.10);
-  margin-bottom:18px
+    0 14px 35px
+    rgba(55,38,25,.12);
 }
 
 h1{
-  font-size:28px;
-  margin:0 0 7px
-}
+  margin:
+    0 0 8px;
 
-h2{
-  font-size:22px;
-  margin:0 0 16px
+  color:#641f24;
+
+  font-size:28px;
+
+  font-weight:800;
 }
 
 .lead{
-  color:#777;
-  margin:0 0 25px;
-  line-height:1.5
+  margin:
+    0 0 25px;
+
+  color:#756d65;
+
+  line-height:1.55;
 }
 
 .upload{
-  border:2px dashed #b88b8b;
-  border-radius:19px;
-  padding:28px 16px;
+  padding:
+    26px 16px;
+
   text-align:center;
-  background:#fffaf8
+
+  border:
+    2px dashed #b99752;
+
+  border-radius:
+    20px;
+
+  background:
+    #fffaf3;
 }
 
 .upload .emoji{
+  margin-bottom:8px;
+
   font-size:42px;
-  margin-bottom:8px
 }
 
 .upload strong{
   display:block;
-  font-size:19px
+
+  color:#641f24;
+
+  font-size:19px;
 }
 
 .upload span{
   display:block;
-  color:#777;
-  margin:7px 0 18px
+
+  margin:
+    7px 0 18px;
+
+  color:#756d65;
 }
 
 input[type=file]{
   width:100%;
-  font-size:16px
+
+  font-size:16px;
 }
 
 .status{
   display:none;
+
   margin-top:18px;
+
   padding:14px;
-  border-radius:13px;
-  background:#f4eee9;
-  color:#555
+
+  border-radius:14px;
+
+  background:#f5eee5;
+
+  color:#4b2020;
+
+  line-height:1.5;
 }
 
 .preview{
   display:none;
-  margin-top:20px
+
+  margin-top:20px;
 }
 
 .preview img{
-  max-width:100%;
-  max-height:420px;
-  border-radius:14px;
   display:block;
-  margin:auto
+
+  max-width:100%;
+
+  max-height:420px;
+
+  margin:0 auto;
+
+  border-radius:16px;
 }
 
 .actions{
-  display:flex;
+  display:none;
+
   gap:10px;
-  margin-top:16px
+
+  margin-top:16px;
 }
 
 .actions button{
-  flex:1
-}
-
-.actions .secondary{
-  background:#eee5e0;
-  color:#4b2020
+  flex:1;
 }
 
 button{
   padding:15px;
+
   border:0;
-  border-radius:13px;
-  background:#702727;
+
+  border-radius:14px;
+
+  background:#641f24;
+
   color:#fff;
+
   font-size:16px;
-  font-weight:700;
-  cursor:pointer
+
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+button.secondary{
+  background:#eee6df;
+
+  color:#641f24;
 }
 
 .note{
   margin-top:20px;
-  padding:15px;
-  border-radius:14px;
-  background:#f5f1ec;
-  color:#666;
-  line-height:1.5
+
+  padding:16px;
+
+  border-radius:15px;
+
+  background:#f5eee5;
+
+  color:#756d65;
+
+  line-height:1.55;
 }
 
+.result{
+  margin-top:20px;
 
-/* =========================
-   ΑΝΑΚΟΙΝΩΣΕΙΣ
-   ========================= */
+  padding:18px;
 
-.announcement-form{
-  margin-top:10px
+  border-radius:16px;
+
+  background:#f5eee5;
+
+  color:#4b2020;
 }
 
-textarea{
-  width:100%;
-  min-height:150px;
-  resize:vertical;
-  padding:15px;
-  border:1px solid #ddd;
-  border-radius:14px;
-  font-family:inherit;
-  font-size:16px;
-  line-height:1.5;
-  outline:none
+.result h2{
+  margin:
+    0 0 12px;
+
+  color:#641f24;
+
+  font-size:20px;
 }
 
-textarea:focus{
-  border-color:#9d6c6c;
+.result-item{
+  padding:
+    12px 0;
+
+  border-bottom:
+    1px solid #dfd3c5;
+
+  line-height:1.55;
 }
 
-.announcement-status{
-  margin-top:12px;
-  padding:12px;
-  border-radius:12px;
-  background:#f4eee9;
-  color:#555;
-  display:none;
-  line-height:1.45
-}
-
-.admin-announcement{
-  margin-top:12px;
-  padding:15px;
-  background:#fffaf8;
-  border:1px solid #eaded6;
-  border-radius:14px
-}
-
-.admin-announcement-date{
-  display:block;
-  color:#888;
-  font-size:13px;
-  margin-bottom:6px
-}
-
-.admin-announcement-text{
-  white-space:pre-wrap;
-  line-height:1.5;
-  color:#4b2020
-}
-
-.delete-announcement{
-  margin-top:10px;
-  width:auto;
-  padding:9px 13px;
-  background:#eee5e0;
-  color:#702727;
-  font-size:14px
-}
-
-.empty-admin{
-  color:#888;
-  text-align:center;
-  padding:15px 0
+.result-item:last-child{
+  border-bottom:0;
 }
 
 </style>
@@ -1500,11 +1251,6 @@ textarea:focus{
 
 <div class="wrap">
 
-
-<!-- =========================
-     ΠΡΟΓΡΑΜΜΑ
-     ========================= -->
-
 <div class="card">
 
 <h1>
@@ -1512,8 +1258,9 @@ textarea:focus{
 </h1>
 
 <p class="lead">
-  Ανέβασε το πρόγραμμα της ενορίας σε φωτογραφία ή PDF.
-  Θα το αναλύσουμε και θα εμφανίσουμε προεπισκόπηση
+  Ανέβασε το πρόγραμμα της ενορίας
+  σε φωτογραφία. Θα το αναλύσουμε
+  και θα εμφανίσουμε προεπισκόπηση
   πριν ενημερωθεί το ημερολόγιο.
 </p>
 
@@ -1525,17 +1272,17 @@ textarea:focus{
 </div>
 
 <strong>
-  Φωτογραφία ή PDF
+  Φωτογραφία προγράμματος
 </strong>
 
 <span>
-  Επίλεξε το αρχείο του προγράμματος
+  JPG ή PNG
 </span>
 
 <input
   id="file"
   type="file"
-  accept="image/*,.pdf,application/pdf"
+  accept="image/jpeg,image/png,image/webp"
 >
 
 </div>
@@ -1544,7 +1291,8 @@ textarea:focus{
 <div
   id="status"
   class="status"
-></div>
+>
+</div>
 
 
 <div
@@ -1589,62 +1337,14 @@ textarea:focus{
   Προσοχή:
 </strong>
 
-το ημερολόγιο δεν αλλάζει ακόμη με την επιλογή
-του αρχείου. Θα γίνει πρώτα έλεγχος των ημερομηνιών
-και των ακολουθιών.
+Το ημερολόγιο δεν αλλάζει ακόμη
+με την επιλογή του αρχείου.
+Πρώτα γίνεται ανάλυση και
+προεπισκόπηση των ακολουθιών.
 
 </div>
 
 </div>
-
-
-<!-- =========================
-     ΑΝΑΚΟΙΝΩΣΕΙΣ
-     ========================= -->
-
-<div class="card">
-
-<h2>
-  📢 Ανακοινώσεις
-</h2>
-
-<p class="lead">
-  Γράψε εδώ την ανακοίνωση που θέλεις να εμφανίζεται
-  στην αρχική σελίδα.
-</p>
-
-
-<div class="announcement-form">
-
-<textarea
-  id="announcementText"
-  placeholder="Γράψε την ανακοίνωση..."
-></textarea>
-
-
-<button
-  id="saveAnnouncement"
-  type="button"
->
-  📢 Δημοσίευση ανακοίνωσης
-</button>
-
-
-<div
-  id="announcementStatus"
-  class="announcement-status"
-></div>
-
-</div>
-
-
-<div
-  id="adminAnnouncements"
-  style="margin-top:20px"
-></div>
-
-</div>
-
 
 </div>
 
@@ -1667,18 +1367,13 @@ const a =
   document.getElementById("actions");
 
 
-/*
- * =========================
- * ΠΡΟΓΡΑΜΜΑ
- * =========================
- */
-
 f.addEventListener(
   "change",
   function () {
 
     const x =
-      f.files && f.files[0];
+      f.files &&
+      f.files[0];
 
     if (!x) {
       return;
@@ -1715,7 +1410,6 @@ f.addEventListener(
 
       i.style.display =
         "none";
-
     }
 
   }
@@ -1742,7 +1436,6 @@ document
     i.removeAttribute(
       "src"
     );
-
   };
 
 
@@ -1752,7 +1445,8 @@ document
   async function () {
 
     const file =
-      f.files && f.files[0];
+      f.files &&
+      f.files[0];
 
 
     if (!file) {
@@ -1764,7 +1458,6 @@ document
         "Παρακαλώ επίλεξε πρώτα φωτογραφία.";
 
       return;
-
     }
 
 
@@ -1777,10 +1470,9 @@ document
         "block";
 
       s.textContent =
-        "Προς το παρόν υποστηρίζονται φωτογραφίες JPG/PNG.";
+        "Υποστηρίζονται μόνο φωτογραφίες JPG/PNG.";
 
       return;
-
     }
 
 
@@ -1806,14 +1498,33 @@ document
         await fetch(
           "/analyze",
           {
-            method:"POST",
-            body:formData
+            method:
+              "POST",
+            body:
+              formData
           }
         );
 
 
-      const data =
-        await response.json();
+      const text =
+        await response.text();
+
+
+      let data;
+
+
+      try {
+
+        data =
+          JSON.parse(text);
+
+      } catch {
+
+        throw new Error(
+          text ||
+          "Ο Worker επέστρεψε μη έγκυρη απάντηση."
+        );
+      }
 
 
       if (!response.ok) {
@@ -1822,7 +1533,6 @@ document
           data.error ||
           "Αποτυχία ανάλυσης."
         );
-
       }
 
 
@@ -1832,42 +1542,32 @@ document
 
       if (
         data &&
-        typeof data.response ===
-        "string"
+        typeof data.response === "string"
       ) {
 
-        let text =
-          String(
-            data.response
-          )
-          .replace(
-            new RegExp(
-              String.fromCharCode(96) +
-              "{3}json",
-              "gi"
-            ),
-            ""
-          )
-          .replace(
-            new RegExp(
-              String.fromCharCode(96) +
-              "{3}",
-              "g"
-            ),
-            ""
-          )
-          .trim();
+        let inner =
+          data.response
+            .replace(
+              /```json/gi,
+              ""
+            )
+            .replace(
+              /```/g,
+              ""
+            )
+            .trim();
 
 
         try {
 
           result =
-            JSON.parse(text);
+            JSON.parse(inner);
 
         } catch {
 
           result = {
-            response:text
+            response:
+              inner
           };
 
         }
@@ -1899,31 +1599,15 @@ document
       box.id =
         "analysisResult";
 
-      box.style.marginTop =
-        "20px";
-
-      box.style.padding =
-        "18px";
-
-      box.style.background =
-        "#f5f1ec";
-
-      box.style.borderRadius =
-        "14px";
-
-      box.style.whiteSpace =
-        "pre-wrap";
-
-      box.style.lineHeight =
-        "1.6";
-
-      box.style.color =
-        "#4b2020";
+      box.className =
+        "result";
 
 
       if (
         result.events &&
-        Array.isArray(result.events)
+        Array.isArray(
+          result.events
+        )
       ) {
 
         const title =
@@ -1931,8 +1615,10 @@ document
             "h2"
           );
 
+
         title.textContent =
           "📅 Ακολουθίες που βρέθηκαν";
+
 
         box.appendChild(
           title
@@ -1940,7 +1626,7 @@ document
 
 
         result.events.forEach(
-          event => {
+          function (event) {
 
             const item =
               document.createElement(
@@ -1948,24 +1634,44 @@ document
               );
 
 
-            item.style.padding =
-              "12px 0";
+            item.className =
+              "result-item";
 
-            item.style.borderBottom =
-              "1px solid #ddd";
+
+            const date =
+              event.date ||
+              "";
+
+            const time =
+              event.time ||
+              "";
+
+            const service =
+              event.title ||
+              "";
+
+            const location =
+              event.location ||
+              "";
 
 
             item.innerHTML =
               "<strong>" +
-              (event.date || "") +
-              " " +
-              (event.time || "") +
+              escapeHtmlClient(
+                date +
+                " " +
+                time
+              ) +
               "</strong><br>" +
-              (event.title || "") +
+              escapeHtmlClient(
+                service
+              ) +
               (
-                event.location
+                location
                   ? "<br>📍 " +
-                    event.location
+                    escapeHtmlClient(
+                      location
+                    )
                   : ""
               );
 
@@ -1987,7 +1693,6 @@ document
                 null,
                 2
               );
-
       }
 
 
@@ -2008,376 +1713,19 @@ document
       s.style.display =
         "block";
 
+
       s.textContent =
-        "❌ Σφάλμα ανάλυσης: " +
-        (
-          error.message ||
-          error
-        );
-
-    }
-
-  };
-
-
-/*
- * =========================
- * ΑΝΑΚΟΙΝΩΣΕΙΣ
- * =========================
- */
-
-const announcementText =
-  document.getElementById(
-    "announcementText"
-  );
-
-
-const announcementStatus =
-  document.getElementById(
-    "announcementStatus"
-  );
-
-
-const adminAnnouncements =
-  document.getElementById(
-    "adminAnnouncements"
-  );
-
-
-function showAnnouncementStatus(
-  text
-) {
-
-  announcementStatus.style.display =
-    "block";
-
-  announcementStatus.textContent =
-    text;
-
-}
-
-
-async function loadAdminAnnouncements() {
-
-  try {
-
-    const response =
-      await fetch(
-        "/announcements?v=" +
-        Date.now(),
-        {
-          cache:"no-store"
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    const announcements =
-      Array.isArray(
-        data.announcements
-      )
-        ? data.announcements
-        : [];
-
-
-    adminAnnouncements.innerHTML =
-      "";
-
-
-    if (!announcements.length) {
-
-      const empty =
-        document.createElement(
-          "div"
-        );
-
-      empty.className =
-        "empty-admin";
-
-      empty.textContent =
-        "Δεν υπάρχουν ανακοινώσεις.";
-
-      adminAnnouncements.appendChild(
-        empty
-      );
-
-      return;
-
-    }
-
-
-    announcements.forEach(
-      announcement => {
-
-        const item =
-          document.createElement(
-            "div"
-          );
-
-        item.className =
-          "admin-announcement";
-
-
-        const date =
-          document.createElement(
-            "span"
-          );
-
-        date.className =
-          "admin-announcement-date";
-
-        date.textContent =
-          announcement.date || "";
-
-        item.appendChild(
-          date
-        );
-
-
-        const text =
-          document.createElement(
-            "div"
-          );
-
-        text.className =
-          "admin-announcement-text";
-
-        text.textContent =
-          announcement.text || "";
-
-        item.appendChild(
-          text
-        );
-
-
-        const button =
-          document.createElement(
-            "button"
-          );
-
-        button.className =
-          "delete-announcement";
-
-        button.type =
-          "button";
-
-        button.textContent =
-          "🗑 Διαγραφή";
-
-
-        button.onclick =
-          async function () {
-
-            if (
-              !confirm(
-                "Να διαγραφεί αυτή η ανακοίνωση;"
-              )
-            ) {
-              return;
-            }
-
-
-            try {
-
-              const response =
-                await fetch(
-                  "/announcements",
-                  {
-                    method:"DELETE",
-
-                    headers:{
-                      "content-type":
-                        "application/json"
-                    },
-
-                    body:
-                      JSON.stringify({
-                        id:
-                          announcement.id
-                      })
-                  }
-                );
-
-
-              const data =
-                await response.json();
-
-
-              if (!response.ok) {
-
-                throw new Error(
-                  data.error ||
-                  "Αποτυχία διαγραφής."
-                );
-
-              }
-
-
-              showAnnouncementStatus(
-                "✅ Η ανακοίνωση διαγράφηκε."
-              );
-
-
-              loadAdminAnnouncements();
-
-
-            } catch (error) {
-
-              showAnnouncementStatus(
-                "❌ " +
-                (
-                  error.message ||
-                  error
-                )
-              );
-
-            }
-
-          };
-
-
-        item.appendChild(
-          button
-        );
-
-
-        adminAnnouncements.appendChild(
-          item
-        );
-
-      }
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      error
-    );
-
-    adminAnnouncements.textContent =
-      "Δεν ήταν δυνατή η φόρτωση των ανακοινώσεων.";
-
-  }
-
-}
-
-
-document
-  .getElementById(
-    "saveAnnouncement"
-  )
-  .onclick =
-  async function () {
-
-    const text =
-      announcementText.value.trim();
-
-
-    if (!text) {
-
-      showAnnouncementStatus(
-        "Γράψε πρώτα την ανακοίνωση."
-      );
-
-      return;
-
-    }
-
-
-    showAnnouncementStatus(
-      "⏳ Δημοσίευση..."
-    );
-
-
-    try {
-
-      const response =
-        await fetch(
-          "/announcements",
-          {
-            method:"POST",
-
-            headers:{
-              "content-type":
-                "application/json"
-            },
-
-            body:
-              JSON.stringify({
-                text
-              })
-          }
-        );
-
-
-      const data =
-        await response.json();
-
-
-      if (!response.ok) {
-
-        throw new Error(
-          data.error ||
-          "Αποτυχία δημοσίευσης."
-        );
-
-      }
-
-
-      announcementText.value =
-        "";
-
-
-      showAnnouncementStatus(
-        "✅ Η ανακοίνωση δημοσιεύτηκε."
-      );
-
-
-      loadAdminAnnouncements();
-
-
-    } catch (error) {
-
-      console.error(
-        error
-      );
-
-
-      showAnnouncementStatus(
         "❌ " +
         (
           error.message ||
           error
-        )
-      );
-
+        );
     }
 
   };
 
 
-loadAdminAnnouncements();
-
-</script>
-
-</body>
-
-</html>`;
-
-}
-
-
-/*
- * =========================
- * ESCAPE HTML
- * =========================
- */
-
-function escapeHtml(
+function escapeHtmlClient(
   value
 ) {
 
@@ -2407,5 +1755,11 @@ function escapeHtml(
       /'/g,
       "&#039;"
     );
+}
 
+</script>
+
+</body>
+
+</html>`;
 }
