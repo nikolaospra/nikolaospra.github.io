@@ -1508,7 +1508,44 @@ button.secondary{
 
   line-height:1.55;
 }
+.announcement-card{
+  margin-top:20px;
+  padding:18px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid #e5d9c8;
+}
 
+.announcement-card h2{
+  margin:0 0 10px;
+  color:#641f24;
+  font-size:20px;
+}
+
+.announcement-card p{
+  margin:0 0 14px;
+  color:#756d65;
+  line-height:1.55;
+}
+
+.announcement-card textarea{
+  width:100%;
+  min-height:130px;
+  padding:14px;
+  border:1px solid #dfd3c5;
+  border-radius:14px;
+  background:#fffaf3;
+  color:#2f2925;
+  font-size:16px;
+  line-height:1.5;
+  resize:vertical;
+  outline:none;
+}
+
+.announcement-card textarea:focus{
+  border-color:#b99752;
+  box-shadow:0 0 0 3px rgba(185,151,82,.16);
+}
 .result{
   margin-top:20px;
 
@@ -1662,7 +1699,34 @@ button.secondary{
 προεπισκόπηση των ακολουθιών.
 
 </div>
+<div class="announcement-card">
 
+  <h2>📢 Ανακοινώσεις</h2>
+
+  <p>
+    Γράψε εδώ την ανακοίνωση που θέλεις
+    να εμφανίζεται στην αρχική σελίδα.
+  </p>
+
+  <textarea
+    id="announcementText"
+    placeholder="Γράψε την ανακοίνωση..."
+    rows="5"
+  ></textarea>
+
+  <button
+    id="publishAnnouncement"
+    type="button"
+  >
+    📢 Δημοσίευση ανακοίνωσης
+  </button>
+
+  <div
+    id="announcementStatus"
+    class="status"
+  ></div>
+
+</div>
 </div>
 
 </div>
@@ -2054,7 +2118,104 @@ document
       ...
       
     };
+document
+  .getElementById("publishAnnouncement")
+  .onclick =
+  async function () {
 
+    const textarea =
+      document.getElementById(
+        "announcementText"
+      );
+
+    const status =
+      document.getElementById(
+        "announcementStatus"
+      );
+
+    const text =
+      textarea.value.trim();
+
+
+    if (!text) {
+
+      status.style.display =
+        "block";
+
+      status.textContent =
+        "⚠️ Γράψε πρώτα την ανακοίνωση.";
+
+      return;
+    }
+
+
+    status.style.display =
+      "block";
+
+    status.textContent =
+      "⏳ Δημοσιεύω την ανακοίνωση...";
+
+
+    try {
+
+      const response =
+        await fetch(
+          "/announcements",
+          {
+            method:
+              "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify({
+                text: text
+              })
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          "Αποτυχία δημοσίευσης."
+        );
+      }
+
+
+      status.textContent =
+        "✅ Η ανακοίνωση δημοσιεύτηκε επιτυχώς.";
+
+
+      textarea.value =
+        "";
+
+
+    } catch (error) {
+
+      console.error(
+        "PUBLISH ANNOUNCEMENT ERROR:",
+        error
+      );
+
+
+      status.textContent =
+        "❌ " +
+        (
+          error.message ||
+          "Αποτυχία δημοσίευσης."
+        );
+    }
+
+  };
 
 function escapeHtmlClient(
 
