@@ -538,7 +538,12 @@ export default {
         request.method === "POST" &&
         url.pathname === "/login"
       ) {
-
+return new Response("LOGIN TEST OK", {
+  status: 200,
+  headers: {
+    "content-type": "text/plain; charset=UTF-8"
+  }
+});
         const form =
           await request.formData();
 
