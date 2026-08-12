@@ -948,3 +948,61 @@ button.btn{
   }
 
 }
+/* =========================================
+   ΑΝΑΚΟΙΝΩΣΕΙΣ
+   ========================================= */
+
+.announcements-box {
+  width: 100%;
+  margin: 18px 0 24px;
+  padding: 20px 18px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 7px 20px rgba(55, 38, 25, 0.10);
+}
+
+.announcements-title {
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+
+  color: var(--burgundy);
+  text-align: center;
+
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.announcements-content {
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.announcement-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.announcement-item:last-child {
+  border-bottom: 0;
+}
+
+.announcement-date {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.announcement-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.announcements-empty {
+  color: var(--muted);
+  text-align: center;
+  font-size: 16px;
+}

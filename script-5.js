@@ -264,141 +264,7 @@ fetch('calendar.ics?v=' + Date.now(), { cache: 'no-store' })
       return result;
     }
 
-/*
- * =========================
- * ΑΝΑΚΟΙΝΩΣΕΙΣ
- * =========================
- */
 
-async function loadAnnouncements() {
-
-  const container =
-    document.getElementById(
-      'announcementsContent'
-    );
-
-  if (!container) {
-    return;
-  }
-
-  try {
-
-    const response =
-      await fetch(
-        'https://oia-parish-admin.nikolaos-pra.workers.dev/announcements?v=' +
-        Date.now(),
-        {
-          cache: 'no-store'
-        }
-      );
-
-    if (!response.ok) {
-      throw new Error(
-        'Αδυναμία φόρτωσης ανακοινώσεων'
-      );
-    }
-
-    const data =
-      await response.json();
-
-    const announcements =
-      Array.isArray(data.announcements)
-        ? data.announcements
-        : [];
-
-
-    container.innerHTML = '';
-
-
-    if (!announcements.length) {
-
-      const empty =
-        document.createElement('div');
-
-      empty.className =
-        'announcements-empty';
-
-      empty.textContent =
-        currentLanguage === 'el'
-          ? 'Δεν υπάρχουν νέες ανακοινώσεις.'
-          : 'There are no new announcements.';
-
-      container.appendChild(empty);
-
-      return;
-    }
-
-
-    announcements.forEach(
-      announcement => {
-
-        const item =
-          document.createElement('div');
-
-        item.className =
-          'announcement-item';
-
-
-        if (announcement.date) {
-
-          const date =
-            document.createElement('span');
-
-          date.className =
-            'announcement-date';
-
-          date.textContent =
-            announcement.date;
-
-          item.appendChild(date);
-        }
-
-
-        const text =
-          document.createElement('div');
-
-        text.className =
-          'announcement-text';
-
-        /*
-         * textContent και όχι innerHTML,
-         * για ασφάλεια.
-         */
-
-        text.textContent =
-          announcement.text || '';
-
-
-        item.appendChild(text);
-
-
-        container.appendChild(item);
-      }
-    );
-
-  } catch (error) {
-
-    console.error(
-      'ANNOUNCEMENTS ERROR:',
-      error
-    );
-
-    container.innerHTML = '';
-
-    const errorBox =
-      document.createElement('div');
-
-    errorBox.className =
-      'announcements-empty';
-
-    errorBox.textContent =
-      currentLanguage === 'el'
-        ? 'Δεν ήταν δυνατή η φόρτωση των ανακοινώσεων.'
-        : 'Announcements could not be loaded.';
-
-    container.appendChild(errorBox);
-  }
-}
     /*
      * =========================
      * ΑΛΛΑΓΗ ΓΛΩΣΣΑΣ
@@ -580,14 +446,12 @@ async function loadAnnouncements() {
        */
 
       if (
-  typeof renderProgram ===
-  'function'
-) {
+        typeof renderProgram ===
+        'function'
+      ) {
 
-  renderProgram();
-}
-
-loadAnnouncements();
+        renderProgram();
+      }
     }
 
 
@@ -1559,25 +1423,7 @@ loadAnnouncements();
       return nextEvent;
     }
 
-/*
- * =========================
- * ΠΡΩΤΗ ΦΟΡΤΩΣΗ ΑΝΑΚΟΙΝΩΣΕΩΝ
- * =========================
- */
 
-loadAnnouncements();
-
-
-/*
- * =========================
- * ΑΝΑΝΕΩΣΗ ΑΝΑΚΟΙΝΩΣΕΩΝ
- * =========================
- */
-
-setInterval(
-  loadAnnouncements,
-  60000
-);
     /*
      * =========================
      * ΑΡΧΙΚΗ ΓΛΩΣΣΑ
