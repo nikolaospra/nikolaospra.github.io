@@ -510,34 +510,103 @@ export default {
      * =========================
      */
 
-    if (
-      request.method === "POST" &&
-      url.pathname === "/login"
-    ) {
+    if (request.method === "POST" && url.pathname === "/login") {
+  try {
+    const form = await request.formData();
+    const password = String(form.get("password") || "");
 
-      const form =
-        await request.formData();
+    if (!env.ADMIN_PASSWORD) {
+      return htmlResponse(
+        loginPage("Δεν έχει οριστεί ADMIN_PASSWORD στο Worker."),
+        500
+      );
+    }
 
+    if (password !== env.ADMIN_PASSWORD) {
+      return htmlResponse(
+        loginPage("Λάθος κωδικός."),
+        401
+      );
+    }
 
-      const password =
-        String(
-          form.get("password") || ""
-        );
+    return htmlResponse(adminPage());
 
+  } catch (error) {
 
-      if (
-        !env.ADMIN_PASSWORD ||
-        password !== env.ADMIN_PASSWORD
-      ) {
+    return new Response(
+      `
+      <!doctype html>
+      <html lang="el">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Σφάλμα Worker</title>
+        <style>
+          body{
+            margin:0;
+            padding:30px 18px;
+            background:#f5f1ec;
+            color:#4b2020;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+          }
 
-        return htmlResponse(
-          loginPage(
-            "Λάθος κωδικός."
-          ),
-          401
-        );
+          .box{
+            max-width:650px;
+            margin:auto;
+            background:#fff;
+            border-radius:24px;
+            padding:25px;
+            box-shadow:0 12px 35px rgba(60,20,20,.12);
+          }
 
+          h1{
+            margin-top:0;
+          }
+
+          pre{
+            white-space:pre-wrap;
+            word-break:break-word;
+            background:#f5f1ec;
+            padding:15px;
+            border-radius:14px;
+          }
+        </style>
+      </head>
+
+      <body>
+
+        <div class="box">
+
+          <h1>⚠️ Σφάλμα Worker</h1>
+
+          <p>
+            Το σφάλμα παρουσιάστηκε κατά το άνοιγμα
+            της σελίδας διαχείρισης.
+          </p>
+
+          <pre>${escapeHtml(
+            error instanceof Error
+              ? error.stack || error.message
+              : String(error)
+          )}</pre>
+
+        </div>
+
+      </body>
+      </html>
+      `,
+      {
+        status: 500,
+        headers: {
+          "content-type":
+            "text/html; charset=UTF-8",
+          "cache-control":
+            "no-store"
+        }
       }
+    );
+  }
+}
 
 
       /*
