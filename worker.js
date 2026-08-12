@@ -528,7 +528,7 @@ export default {
       }
 
 
-      /*
+       /*
        * =====================================================
        * LOGIN
        * =====================================================
@@ -538,21 +538,14 @@ export default {
         request.method === "POST" &&
         url.pathname === "/login"
       ) {
-return new Response("LOGIN TEST OK", {
-  status: 200,
-  headers: {
-    "content-type": "text/plain; charset=UTF-8"
-  }
-});
+
         const form =
           await request.formData();
-
 
         const password =
           String(
             form.get("password") || ""
           );
-
 
         if (
           !env.ADMIN_PASSWORD ||
@@ -567,11 +560,11 @@ return new Response("LOGIN TEST OK", {
           );
         }
 
-
         return htmlResponse(
-  "<h1 style='font-family:sans-serif;text-align:center;margin-top:80px'>LOGIN OK</h1>",
-  200
-);
+          adminPage(),
+          200
+        );
+      }
 
 
       /*
@@ -590,8 +583,6 @@ return new Response("LOGIN TEST OK", {
           }
         }
       );
-
-    } catch (error) {
 
       /*
        * =====================================================
