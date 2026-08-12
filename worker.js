@@ -554,20 +554,25 @@ if (
    */
 
   return new Response(
-    JSON.stringify({
-      success: true,
+  JSON.stringify({
+    success: true,
 
-      saved: true,
+    saved: true,
 
-      push: true,
+    push: true,
 
-      announcement: {
-        id,
-        date,
-        text
-      }
+    oneSignalStatus:
+      oneSignalResponse.status,
 
-    }),
+    oneSignal:
+      oneSignalText,
+
+    announcement: {
+      id,
+      date,
+      text
+    }
+  }),
     {
       status: 200,
       headers: {
