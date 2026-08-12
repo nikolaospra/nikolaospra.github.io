@@ -192,90 +192,121 @@ export default {
 
 
       /*
-       * =====================================================
-       * ANNOUNCEMENTS / ΑΝΑΚΟΙΝΩΣΕΙΣ
-       *
-       * Διαβάζει τα entries από το KV namespace
-       * ANNOUNCEMENTS.
-       * =====================================================
-       */
+ * =====================================================
+ * ANNOUNCEMENTS / ΑΝΑΚΟΙΝΩΣΕΙΣ
+ *
+ * GET  /announcements
+ * POST /announcements
+ *
+ * Αποθήκευση στο KV + Push μέσω OneSignal
+ * =====================================================
+ */
 
-      if (
-        request.method === "GET" &&
-        url.pathname === "/announcements"
-      ) {
-
-        if (!env.ANNOUNCEMENTS) {
-
-          return new Response(
-            JSON.stringify({
-              announcements: []
-            }),
-            {
-              status: 200,
-              headers: {
-                "content-type":
-                  "application/json; charset=UTF-8",
-                "cache-control":
-                  "no-store",
-                ...corsHeaders
-              }
-            }
-          );
-        }
-
-
-        const listed =
-          await env.ANNOUNCEMENTS.list({
-            limit: 100
-          });
-
-
-        const announcements = [];
-
-
-        for (
-          const key of listed.keys
-        ) {
-
-          const value =
-            await env.ANNOUNCEMENTS.get(
-              key.name
-            );
-
-
-          if (value !== null) {
-
-            announcements.push({
-              key: key.name,
-              value: value
-            });
-
-          }
-
-        }
-
-
-        return new Response(
-          JSON.stringify({
-            announcements
-          }),
-          {
-            status: 200,
-            headers: {
-              "content-type":
-                "application/json; charset=UTF-8",
-              "cache-control":
-                "no-store",
-              ...corsHeaders
-            }
-          }
-        );
-      }
 
 /*
  * =====================================================
- * ANNOUNCEMENTS / CREATE + ONESIGNAL PUSH
+ * GET ANNOUNCEMENTS
+ * =====================================================
+ */
+
+if (
+  request.method === "GET" &&
+  url.pathname === "/announcements"
+) {
+
+  if (!env.ANNOUNCEMENTS) {
+
+    return new Response(
+      JSON.stringify({
+        announcements: []
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type":
+            "application/json; charset=UTF-8",
+          "cache-control":
+            "no-store",
+          ...corsHeaders
+        }
+      }
+    );
+  }
+
+
+  const listed =
+    await env.ANNOUNCEMENTS.list({
+      limit: 100
+    });
+
+
+  const announcements = [];
+
+
+  for (
+    const key of listed.keys
+  ) {
+
+    const value =
+      await env.ANNOUNCEMENTS.get(
+        key.name
+      );
+
+
+    if (value !== null) {
+
+      try {
+
+        const parsed =
+          JSON.parse(value);
+
+        announcements.push({
+          key: key.name,
+          date:
+            parsed.date || "",
+          text:
+            parsed.text || ""
+        });
+
+      } catch {
+
+        announcements.push({
+          key: key.name,
+          date: "",
+          text: value
+        });
+
+      }
+
+    }
+
+  }
+
+
+  return new Response(
+    JSON.stringify({
+      announcements
+    }),
+    {
+      status: 200,
+      headers: {
+        "content-type":
+          "application/json; charset=UTF-8",
+        "cache-control":
+          "no-store",
+        ...corsHeaders
+      }
+    }
+  );
+}
+
+
+/*
+ * =====================================================
+ * POST ANNOUNCEMENT
+ *
+ * Αποθηκεύει την ανακοίνωση στο KV
+ * και στέλνει Push Notification μέσω OneSignal.
  * =====================================================
  */
 
@@ -284,37 +315,16 @@ if (
   url.pathname === "/announcements"
 ) {
 
-  const suppliedPassword =
-    request.headers.get("X-Admin-Password") || "";
-
-  if (
-    !env.ADMIN_PASSWORD ||
-    suppliedPassword !== env.ADMIN_PASSWORD
-  ) {
-
-    return new Response(
-      JSON.stringify({
-        error:
-          "Μη εξουσιοδοτημένη πρόσβαση."
-      }),
-      {
-        status: 401,
-        headers: {
-          "content-type":
-            "application/json; charset=UTF-8",
-          ...corsHeaders
-        }
-      }
-    );
-  }
-
+  /*
+   * Έλεγχος KV
+   */
 
   if (!env.ANNOUNCEMENTS) {
 
     return new Response(
       JSON.stringify({
         error:
-          "Δεν έχει συνδεθεί το KV binding ANNOUNCEMENTS."
+          "Δεν έχει συνδεθεί το ANNOUNCEMENTS KV namespace."
       }),
       {
         status: 500,
@@ -328,28 +338,49 @@ if (
   }
 
 
-  const body =
-    await request.json();
+  /*
+   * Έλεγχος OneSignal Secrets
+   */
 
-
-  const text =
-    String(
-      body.text || ""
-    ).trim();
-
-
-  const date =
-    String(
-      body.date || ""
-    ).trim();
-
-
-  if (!text) {
+  if (
+    !env.ONESIGNAL_APP_ID ||
+    !env.ONESIGNAL_API_KEY
+  ) {
 
     return new Response(
       JSON.stringify({
         error:
-          "Γράψε το κείμενο της ανακοίνωσης."
+          "Δεν έχουν ρυθμιστεί τα OneSignal Secrets."
+      }),
+      {
+        status: 500,
+        headers: {
+          "content-type":
+            "application/json; charset=UTF-8",
+          ...corsHeaders
+        }
+      }
+    );
+  }
+
+
+  /*
+   * Διάβασμα JSON από το request
+   */
+
+  let body;
+
+  try {
+
+    body =
+      await request.json();
+
+  } catch {
+
+    return new Response(
+      JSON.stringify({
+        error:
+          "Μη έγκυρη JSON ανακοίνωση."
       }),
       {
         status: 400,
@@ -363,200 +394,187 @@ if (
   }
 
 
-  const announcement = {
+  const text =
+    String(
+      body.text || ""
+    ).trim();
 
-    text: text,
 
-    date:
-      date ||
-      new Intl.DateTimeFormat(
-        "el-GR",
-        {
-          timeZone:
-            "Europe/Athens"
+  if (!text) {
+
+    return new Response(
+      JSON.stringify({
+        error:
+          "Η ανακοίνωση είναι κενή."
+      }),
+      {
+        status: 400,
+        headers: {
+          "content-type":
+            "application/json; charset=UTF-8",
+          ...corsHeaders
         }
-      ).format(
-        new Date()
-      ),
-
-    createdAt:
-      new Date().toISOString()
-
-  };
-
-
-  const key =
-    "announcement-" +
-    Date.now();
+      }
+    );
+  }
 
 
   /*
-   * ΑΠΟΘΗΚΕΥΣΗ ΣΤΟ KV
+   * Ημερομηνία ανακοίνωσης
+   */
+
+  const date =
+    body.date
+      ? String(body.date)
+      : new Date().toLocaleDateString(
+          "el-GR"
+        );
+
+
+  /*
+   * Μοναδικό ID
+   */
+
+  const id =
+    Date.now().toString();
+
+
+  /*
+   * Αποθήκευση στο KV
    */
 
   await env.ANNOUNCEMENTS.put(
-    key,
-    JSON.stringify(
-      announcement
-    )
+    id,
+    JSON.stringify({
+      date,
+      text
+    })
   );
 
 
   /*
-   * ONESIGNAL
+   * ===================================================
+   * ONESIGNAL PUSH
+   * ===================================================
    */
 
-  let push = {
-    attempted: false,
-    sent: false
-  };
+  const oneSignalResponse =
+    await fetch(
+      "https://api.onesignal.com/notifications",
+      {
+        method: "POST",
 
+        headers: {
+          "Content-Type":
+            "application/json",
 
-  if (
-    env.ONESIGNAL_APP_ID &&
-    env.ONESIGNAL_API_KEY
-  ) {
+          "Authorization":
+            "Key " +
+            env.ONESIGNAL_API_KEY
+        },
 
-    push.attempted =
-      true;
+        body:
+          JSON.stringify({
 
+            app_id:
+              env.ONESIGNAL_APP_ID,
 
-    const oneSignalResponse =
-      await fetch(
-        "https://api.onesignal.com/notifications",
-        {
-          method: "POST",
+            target_channel:
+              "push",
 
-          headers: {
-            "Content-Type":
-              "application/json",
+            included_segments:
+              [
+                "Subscribed Users"
+              ],
 
-            "Authorization":
-              "Key " +
-              env.ONESIGNAL_API_KEY
-          },
+            headings: {
+              el:
+                "📢 Ανακοίνωση ενορίας",
+              en:
+                "📢 Parish Announcement"
+            },
 
-          body:
-            JSON.stringify({
+            contents: {
+              el:
+                text,
+              en:
+                text
+            }
 
-              app_id:
-                env.ONESIGNAL_APP_ID,
-
-              target_channel:
-                "push",
-
-              included_segments:
-                [
-                  "Subscribed Users"
-                ],
-
-              headings: {
-                el:
-                  "Νέα ανακοίνωση",
-                en:
-                  "Νέα ανακοίνωση"
-              },
-
-              contents: {
-                el:
-                  text,
-                en:
-                  text
-              },
-
-              url:
-                "https://nikolaospra.github.io/"
-
-            })
-        }
-      );
-
-
-    const oneSignalText =
-      await oneSignalResponse.text();
-
-
-    if (
-      !oneSignalResponse.ok
-    ) {
-
-      console.error(
-        "ONESIGNAL ERROR:",
-        oneSignalResponse.status,
-        oneSignalText
-      );
-
-
-      return new Response(
-        JSON.stringify({
-
-          ok: true,
-
-          announcementSaved:
-            true,
-
-          push:
-            false,
-
-          error:
-            "Η ανακοίνωση αποθηκεύτηκε, αλλά το OneSignal επέστρεψε σφάλμα.",
-
-          onesignalStatus:
-            oneSignalResponse.status
-
-        }),
-        {
-          status: 502,
-
-          headers: {
-            "content-type":
-              "application/json; charset=UTF-8",
-            ...corsHeaders
-          }
-        }
-      );
-    }
-
-
-    push.sent =
-      true;
-
-  } else {
-
-    console.error(
-      "ONESIGNAL: λείπει ONESIGNAL_APP_ID ή ONESIGNAL_API_KEY"
+          })
+      }
     );
 
+
+  const oneSignalText =
+    await oneSignalResponse.text();
+
+
+  /*
+   * Αν το OneSignal αποτύχει,
+   * η ανακοίνωση παραμένει αποθηκευμένη.
+   */
+
+  if (!oneSignalResponse.ok) {
+
+    console.error(
+      "ONESIGNAL ERROR:",
+      oneSignalText
+    );
+
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+
+        saved: true,
+
+        push: false,
+
+        error:
+          "Η ανακοίνωση αποθηκεύτηκε, αλλά το Push του OneSignal απέτυχε.",
+
+        oneSignal:
+          oneSignalText
+      }),
+      {
+        status: 502,
+        headers: {
+          "content-type":
+            "application/json; charset=UTF-8",
+          ...corsHeaders
+        }
+      }
+    );
   }
 
 
+  /*
+   * Επιτυχία
+   */
+
   return new Response(
     JSON.stringify({
+      success: true,
 
-      ok: true,
+      saved: true,
 
-      announcementSaved:
-        true,
+      push: true,
 
-      key:
-
-        key,
-
-      push:
-
-        push
+      announcement: {
+        id,
+        date,
+        text
+      }
 
     }),
     {
       status: 200,
-
       headers: {
         "content-type":
           "application/json; charset=UTF-8",
-
         "cache-control":
           "no-store",
-
         ...corsHeaders
       }
     }
