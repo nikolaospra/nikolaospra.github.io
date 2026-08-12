@@ -2195,21 +2195,36 @@ document
         await response.json();
 
 
-      if (!response.ok) {
+     if (!response.ok) {
+    throw new Error(
+        data.error ||
+        data.oneSignal ||
+        "Αποτυχία δημοσίευσης."
+    );
+}
 
-        throw new Error(
-          data.error ||
-          "Αποτυχία δημοσίευσης."
-        );
-      }
+/*
+ * Ελέγχουμε ξεχωριστά αν στάλθηκε το Push.
+ */
 
+if (data.push === true) {
 
-      status.textContent =
-        "✅ Η ανακοίνωση δημοσιεύτηκε επιτυχώς.";
+    status.textContent =
+        "✅ Η ανακοίνωση αποθηκεύτηκε και το Push στάλθηκε επιτυχώς.";
 
+} else {
 
-      textarea.value =
-        "";
+    status.textContent =
+        "⚠️ Η ανακοίνωση αποθηκεύτηκε, αλλά το Push ΔΕΝ στάλθηκε."
+        + (data.oneSignal
+            ? " " + data.oneSignal
+            : "");
+
+    console.error(
+        "ONESIGNAL PUSH FAILED:",
+        data.oneSignal
+    );
+}
 
 
     } catch (error) {
