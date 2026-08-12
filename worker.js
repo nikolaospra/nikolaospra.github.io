@@ -508,7 +508,15 @@ if (
 
   const oneSignalText =
     await oneSignalResponse.text();
+console.log(
+  "ONESIGNAL STATUS:",
+  oneSignalResponse.status
+);
 
+console.log(
+  "ONESIGNAL RESPONSE:",
+  oneSignalText
+);
 
   /*
    * Αν το OneSignal αποτύχει,
