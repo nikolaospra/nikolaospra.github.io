@@ -251,32 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
   id="servicesBtn"
   class="btn"
   type="button"
-  onclick="
-    const p = prompt('🔐 Κωδικός πρόσβασης');
-
-    if (p === null) return;
-
-    if (p !== '1234') {
-      alert('❌ Λάθος κωδικός.');
-      return;
-    }
-
-    const choice = prompt(
-      'Επίλεξε υπηρεσία:\n\n' +
-      '1 -- 💍 Γάμος\n' +
-      '2 -- 👶 Βάπτιση'
-    );
-
-    if (choice === '1') {
-      window.location.href =
-        'https://eu3.ragic.com/prasinos/forms/2?ragic-web-embed=true&webaction=form&ver=new&version=2';
-    }
-
-    if (choice === '2') {
-      window.location.href =
-        'https://eu3.ragic.com/prasinos/forms/1?ragic-web-embed=true&webaction=form&ver=new&version=2';
-    }
-  "
+  onclick="openServices()"
 >
   💒 Γάμος – Βάπτιση
 </button>
@@ -416,7 +391,160 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 </div>
+</div>
+<!-- =========================
+     ΓΑΜΟΣ - ΒΑΠΤΙΣΗ
+     ========================= -->
 
+<div
+  id="servicesModal"
+  class="services-modal"
+>
+
+  <div class="services-box">
+
+    <button
+      class="services-close"
+      type="button"
+      onclick="closeServices()"
+    >
+      ×
+    </button>
+
+    <div class="services-title">
+      Γάμος – Βάπτιση
+    </div>
+
+    <div class="services-subtitle">
+      Επίλεξε την υπηρεσία που θέλεις
+    </div>
+
+    <div class="services-buttons">
+
+      <button
+        type="button"
+        onclick="openRagicForm('marriage')"
+      >
+        💍 Γάμος
+      </button>
+
+      <button
+        type="button"
+        onclick="openRagicForm('baptism')"
+      >
+        👶 Βάπτιση
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     RAGIC FORM
+     ========================= -->
+
+<div
+  id="ragicModal"
+  class="services-modal"
+>
+
+  <div class="ragic-box">
+
+    <button
+      class="services-close"
+      type="button"
+      onclick="closeRagicForm()"
+    >
+      ×
+    </button>
+
+    <iframe
+      id="ragicFrame"
+      src=""
+      title="Φόρμα"
+    ></iframe>
+
+  </div>
+
+</div>
+
+
+<script>
+
+function openServices() {
+
+  const password =
+    prompt("🔐 Κωδικός πρόσβασης");
+
+  if (password === null) {
+    return;
+  }
+
+  if (password !== "1234") {
+
+    alert("❌ Λάθος κωδικός.");
+
+    return;
+  }
+
+  document
+    .getElementById("servicesModal")
+    .style.display = "flex";
+}
+
+
+function closeServices() {
+
+  document
+    .getElementById("servicesModal")
+    .style.display = "none";
+}
+
+
+function openRagicForm(type) {
+
+  const frame =
+    document.getElementById("ragicFrame");
+
+  if (type === "marriage") {
+
+    frame.src =
+      "https://eu3.ragic.com/prasinos/forms/2?ragic-web-embed=true&webaction=form&ver=new&version=2";
+
+  }
+
+  if (type === "baptism") {
+
+    frame.src =
+      "https://eu3.ragic.com/prasinos/forms/1?ragic-web-embed=true&webaction=form&ver=new&version=2";
+
+  }
+
+  document
+    .getElementById("servicesModal")
+    .style.display = "none";
+
+  document
+    .getElementById("ragicModal")
+    .style.display = "flex";
+}
+
+
+function closeRagicForm() {
+
+  document
+    .getElementById("ragicModal")
+    .style.display = "none";
+
+  document
+    .getElementById("ragicFrame")
+    .src = "";
+}
+
+</script>
 </body>
 
 </html>
