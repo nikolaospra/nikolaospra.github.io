@@ -30,52 +30,9 @@ export default {
         });
       }
 
-if (
-  request.method === "POST" &&
-  url.pathname === "/services-auth"
-) {
-  const body = await request.json();
 
-  const password =
-    String(body.password || "");
-
-  if (
-    !env.SERVICES_PASSWORD ||
-    password !== env.SERVICES_PASSWORD
-  ) {
-    return new Response(
-      JSON.stringify({
-        ok: false
-      }),
-      {
-        status: 401,
-        headers: {
-          "content-type":
-            "application/json; charset=UTF-8",
-          ...corsHeaders
-        }
-      }
-    );
-  }
-
-  return new Response(
-    JSON.stringify({
-      ok: true
-    }),
-    {
-      status: 200,
-      headers: {
-        "content-type":
-          "application/json; charset=UTF-8",
-        ...corsHeaders
-      }
-    }
-  );
-}
       /*
-       * 
-       
-=====================================================
+       * =====================================================
        * CALENDAR
        * =====================================================
        */
