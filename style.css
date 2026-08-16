@@ -1158,3 +1158,27 @@ button.btn{
   height: 100%;
   border: 0;
 }
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.contact-details a,
+.contact-details div {
+  color: #641f24;
+  text-decoration: none;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.contact-details a:active {
+  opacity: .7;
+}
+
+.contact-map-btn {
+  width: 100%;
+  margin-top: 8px;
+}

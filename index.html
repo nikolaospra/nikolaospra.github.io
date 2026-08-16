@@ -263,6 +263,67 @@ document.addEventListener("DOMContentLoaded", () => {
   💒 Γάμος – Βάπτιση
 </button>
 </p>
+<p>
+  <button
+    id="contactBtn"
+    class="btn"
+    type="button"
+  >
+    ✉️ Επικοινωνία
+  </button>
+</p>
+
+<div
+  id="contactModal"
+  class="services-modal"
+>
+
+  <div class="services-box">
+
+    <button
+      class="services-close"
+      type="button"
+      onclick="closeContact()"
+    >
+      ×
+    </button>
+
+    <div class="services-title">
+      Επικοινωνία
+    </div>
+
+    <div class="services-subtitle">
+      Ιερός ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας
+      "Παναγία Πλατσανή"
+    </div>
+
+    <div class="contact-details">
+
+      <a href="tel:+306938785587">
+        📞 <strong>0030 6938785587</strong>
+      </a>
+
+      <a href="mailto:nikolaos.pra@gmail.com">
+        ✉️ <strong>nikolaos.pra@gmail.com</strong>
+      </a>
+
+      <div>
+        📍 <strong>Οία Θήρας</strong>
+      </div>
+
+      <button
+        class="btn contact-map-btn"
+        type="button"
+        onclick="openChurchMap()"
+      >
+        🗺️ Χάρτης
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
   <!-- =========================
        RADIO FLOGA
        ========================= -->
@@ -550,7 +611,32 @@ function closeRagicForm() {
     .getElementById("ragicFrame")
     .src = "";
 }
+document
+  .getElementById("contactBtn")
+  .addEventListener("click", function () {
 
+    document
+      .getElementById("contactModal")
+      .style.display = "flex";
+
+  });
+
+function closeContact() {
+
+  document
+    .getElementById("contactModal")
+    .style.display = "none";
+
+}
+
+function openChurchMap() {
+
+  window.open(
+    "https://www.google.com/maps/search/?api=1&query=Ιερός+Ναός+Παναγίας+Ακαθίστου+Ύμνου+Οίας+Παναγία+Πλατσανή",
+    "_blank"
+  );
+
+}
 </script>
 </body>
 
