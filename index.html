@@ -359,6 +359,14 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 
     <div
+    <button
+    type="button"
+    class="btn"
+    onclick="translateHistory()"
+    style="margin:10px auto 18px; width:auto; padding:10px 18px; font-size:15px;"
+>
+    🌐 Μετάφραση
+</button>
       class="history-content"
       style="text-align:left; line-height:1.7; overflow-y:auto; max-height:65vh;"
     >
@@ -782,6 +790,21 @@ function closeHistory() {
   document
     .getElementById("historyModal")
     .style.display = "none";
+}
+function translateHistory() {
+
+  const browserLanguage =
+    (navigator.language || "en").split("-")[0].toLowerCase();
+
+  const currentPage = window.location.href;
+
+  const googleTranslateUrl =
+    "https://translate.google.com/translate?sl=auto&tl=" +
+    encodeURIComponent(browserLanguage) +
+    "&u=" +
+    encodeURIComponent(currentPage);
+
+  window.open(googleTranslateUrl, "_blank");
 }
 </script>
 </body>
