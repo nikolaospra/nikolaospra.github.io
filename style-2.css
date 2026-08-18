@@ -159,14 +159,14 @@ h1{
 .church-image img{
   display:block;
 
-  width:100%;
-  height:auto;
+  width:220px;
+  height:220px;
 
-  object-fit:cover;
+  object-fit:contain;
 
   margin:0 auto;
 
-  border-radius:0px;
+  border-radius:18px;
 }
 
 
