@@ -46,14 +46,6 @@ SUMMARY:Όρθρος - Θεία Λειτουργία
 LOCATION:Ιερός Ναός Αγίας Ματρώνας (Φοινικιά)
 END:VEVENT
 BEGIN:VEVENT
-UID:c7df2df2-37b5-405f-8f30-fb12ed708904@oia
-DTSTAMP:20260909T164900Z
-DTSTART;TZID=Europe/Athens:20260921T071500
-DTEND;TZID=Europe/Athens:20260921T091500
-SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας «Παναγία Πλατσανή»
-END:VEVENT
-BEGIN:VEVENT
 UID:c3e606ec-807b-4c2d-9bf4-15f4022079b5@oia
 DTSTAMP:20260909T164900Z
 DTSTART;TZID=Europe/Athens:20260924T071500
