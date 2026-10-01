@@ -37,12 +37,4 @@ DTEND;TZID=Europe/Athens:20261004T100000
 SUMMARY:Όρθρος - Θεία Λειτουργία
 LOCATION:Ιερός Ναός Αγίου Γεωργίου
 END:VEVENT
-BEGIN:VEVENT
-UID:60c76302-fa0d-41c5-b148-ede7bceb8286@oia
-DTSTAMP:20261001T084700Z
-DTSTART;TZID=Europe/Athens:20261010T070000
-DTEND;TZID=Europe/Athens:20261010T100000
-SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας «Παναγία Πλατσανή»
-END:VEVENT
 END:VCALENDAR
