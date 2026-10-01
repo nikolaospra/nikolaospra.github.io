@@ -1198,3 +1198,10 @@ button.btn{
     border-radius: 20px;
     cursor: pointer;
 }
+/* Τίτλος Facebook */
+
+.facebook-box-title {
+font-size: 22px;
+font-weight: 700;
+text-align: center;
+}
