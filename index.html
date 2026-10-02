@@ -492,17 +492,31 @@ document.addEventListener("DOMContentLoaded", () => {
        ========================= -->
 
   <div class="radio-player">
-
-    <iframe
-      src="https://volticast.com/embed/radiofloga"
-      height="120"
-      frameborder="0"
-      scrolling="no"
-      allow="autoplay"
-    >
-    </iframe>
-
+  <div class="radio-player-title">
+    📻 ΡΑΔΙΟ ΦΛΟΓΑ
   </div>
+
+  <div class="radio-player-controls">
+    <button id="radioPlay" type="button" aria-label="Αναπαραγωγή">
+      ▶
+    </button>
+
+    <div class="radio-info">
+      <div id="radioStatus">Πατήστε ▶ για ακρόαση</div>
+      <div class="radio-live">● LIVE</div>
+    </div>
+
+    <button id="radioMute" type="button" aria-label="Σίγαση">
+      🔊
+    </button>
+  </div>
+
+  <audio id="radioAudio" preload="none">
+    <source
+      src="http://radiofloga.ddns.net:8000/stream"
+      type="audio/mpeg">
+  </audio>
+</div>
 
 
   <!-- =========================
