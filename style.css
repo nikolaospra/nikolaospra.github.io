@@ -392,10 +392,15 @@ button.btn{
    RADIO FLOGA
    ========================================= */
 
+/* =========================
+   ΡΑΔΙΟ ΦΛΟΓΑ
+   ========================= */
+
 .radio-player {
   width: 100%;
   margin: 20px 0 24px;
-  padding: 20px;
+  padding: 20px 18px;
+
   border-radius: 26px;
 
   background:
@@ -413,30 +418,39 @@ button.btn{
 
 .radio-player-title {
   text-align: center;
+
   font-size: 21px;
   font-weight: 800;
+
   letter-spacing: 1px;
+
   margin-bottom: 16px;
 }
 
 .radio-player-controls {
   display: flex;
   align-items: center;
+  justify-content: center;
+
   gap: 14px;
 }
 
 .radio-player-controls button {
   width: 52px;
   height: 52px;
+
   flex: 0 0 52px;
 
   border: 0;
   border-radius: 50%;
 
   background: rgba(255,255,255,.14);
+
   color: #fff;
 
-  font-size: 21px;
+  font-size: 20px;
+  font-weight: 700;
+
   cursor: pointer;
 }
 
@@ -447,26 +461,27 @@ button.btn{
 .radio-info {
   flex: 1;
   min-width: 0;
+
   text-align: center;
 }
 
 #radioStatus {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
 }
 
 .radio-live {
   margin-top: 5px;
+
   font-size: 12px;
   font-weight: 800;
+
   letter-spacing: 1px;
-  color: #fff;
 }
 
 #radioMute {
   font-size: 18px;
 }
-
 
 /* =========================================
    ΠΡΟΓΡΑΜΜΑ ΙΕΡΩΝ ΑΚΟΛΟΥΘΙΩΝ
