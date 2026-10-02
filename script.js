@@ -1698,3 +1698,46 @@ setInterval(
       );
     }
   );
+  const radioAudio = document.getElementById('radioAudio');
+const radioPlay = document.getElementById('radioPlay');
+const radioMute = document.getElementById('radioMute');
+const radioStatus = document.getElementById('radioStatus');
+
+if (radioAudio && radioPlay) {
+
+  radioPlay.addEventListener('click', async () => {
+
+    if (radioAudio.paused) {
+
+      try {
+        await radioAudio.play();
+
+        radioPlay.textContent = '❚❚';
+        radioStatus.textContent = 'Αναπαραγωγή Ράδιο Φλόγα';
+
+      } catch (error) {
+
+        radioStatus.textContent =
+          'Δεν ήταν δυνατή η σύνδεση με το ραδιόφωνο.';
+      }
+
+    } else {
+
+      radioAudio.pause();
+
+      radioPlay.textContent = '▶';
+      radioStatus.textContent = 'Πατήστε ▶ για ακρόαση';
+    }
+  });
+}
+
+if (radioMute && radioAudio) {
+
+  radioMute.addEventListener('click', () => {
+
+    radioAudio.muted = !radioAudio.muted;
+
+    radioMute.textContent =
+      radioAudio.muted ? '🔇' : '🔊';
+  });
+}

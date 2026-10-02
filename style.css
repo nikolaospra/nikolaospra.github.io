@@ -392,26 +392,79 @@ button.btn{
    RADIO FLOGA
    ========================================= */
 
-.radio-player{
-  width:100%;
+.radio-player {
+  width: 100%;
+  margin: 20px 0 24px;
+  padding: 20px;
+  border-radius: 26px;
 
-  display:flex;
+  background:
+    linear-gradient(
+      145deg,
+      #702727 0%,
+      #541c1c 100%
+    );
 
-  justify-content:center;
+  color: #fff;
 
-  margin:15px auto 20px;
+  box-shadow:
+    0 14px 32px rgba(70, 25, 25, 0.22);
 }
 
-.radio-player iframe{
-  width:100%;
+.radio-player-title {
+  text-align: center;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
 
-  max-width:400px;
+.radio-player-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 
-  height:120px;
+.radio-player-controls button {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
 
-  border:0;
+  border: 0;
+  border-radius: 50%;
 
-  border-radius:16px;
+  background: rgba(255,255,255,.14);
+  color: #fff;
+
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.radio-player-controls button:active {
+  transform: scale(.95);
+}
+
+.radio-info {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+#radioStatus {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.radio-live {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+#radioMute {
+  font-size: 18px;
 }
 
 
