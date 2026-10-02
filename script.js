@@ -1698,46 +1698,80 @@ setInterval(
       );
     }
   );
-  const radioAudio = document.getElementById('radioAudio');
-const radioPlay = document.getElementById('radioPlay');
-const radioMute = document.getElementById('radioMute');
-const radioStatus = document.getElementById('radioStatus');
+  const radioAudio =
+document.getElementById('radioAudio');
+
+const radioPlay =
+document.getElementById('radioPlay');
+
+const radioMute =
+document.getElementById('radioMute');
+
+const radioStatus =
+document.getElementById('radioStatus');
+
+let radioLoading = false;
 
 if (radioAudio && radioPlay) {
 
-  radioPlay.addEventListener('click', async () => {
+    radioPlay.addEventListener('click', async () => {
 
-    if (radioAudio.paused) {
+        // Αν ήδη συνδέεται, αγνόησε δεύτερο πάτημα
+        if (radioLoading) return;
 
-      try {
-        await radioAudio.play();
+        if (radioAudio.paused) {
 
-        radioPlay.textContent = '❚❚';
-        radioStatus.textContent = 'Αναπαραγωγή Ράδιο Φλόγα';
+            radioLoading = true;
+            radioPlay.disabled = true;
+            radioPlay.style.opacity = '0.6';
 
-      } catch (error) {
+            radioStatus.textContent =
+                'Σύνδεση με το Ράδιο Φλόγα...';
 
-        radioStatus.textContent =
-          'Δεν ήταν δυνατή η σύνδεση με το ραδιόφωνο.';
-      }
+            try {
 
-    } else {
+                await radioAudio.play();
 
-      radioAudio.pause();
+                radioPlay.textContent = '❚❚';
 
-      radioPlay.textContent = '▶';
-      radioStatus.textContent = 'Πατήστε ▶ για ακρόαση';
-    }
-  });
+                radioStatus.textContent =
+                    'Αναπαραγωγή Ράδιο Φλόγα';
+
+            } catch (error) {
+
+                radioPlay.textContent = '▶';
+
+                radioStatus.textContent =
+                    'Δεν ήταν δυνατή η σύνδεση με το ραδιόφωνο.';
+
+            } finally {
+
+                radioLoading = false;
+                radioPlay.disabled = false;
+                radioPlay.style.opacity = '1';
+            }
+
+        } else {
+
+            radioAudio.pause();
+
+            radioPlay.textContent = '▶';
+
+            radioStatus.textContent =
+                'Πατήστε ▶ για ακρόαση';
+        }
+    });
 }
+
 
 if (radioMute && radioAudio) {
 
-  radioMute.addEventListener('click', () => {
+    radioMute.addEventListener('click', () => {
 
-    radioAudio.muted = !radioAudio.muted;
+        radioAudio.muted =
+            !radioAudio.muted;
 
-    radioMute.textContent =
-      radioAudio.muted ? '🔇' : '🔊';
-  });
+        radioMute.textContent =
+            radioAudio.muted ? '🔇' : '🔊';
+    });
 }
