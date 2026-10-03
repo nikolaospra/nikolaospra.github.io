@@ -490,19 +490,37 @@ document.addEventListener("DOMContentLoaded", () => {
   <!-- =========================
        RADIO FLOGA
        ========================= -->
-
   <div class="radio-player">
+  <div class="radio-player-title">
+    📻 ΡΑΔΙΟ ΦΛΟΓΑ
+  </div>
 
-    <iframe
-      src="https://volticast.com/embed/radiofloga"
-      height="120"
-      frameborder="0"
-      scrolling="no"
-      allow="autoplay"
-    >
-    </iframe>
+  <div class="radio-player-controls">
+
+    <button id="radioPlay" type="button">
+      ▶
+    </button>
+
+    <div class="radio-info">
+      <div id="radioStatus">
+        Πατήστε ▶ για ακρόαση
+      </div>
+      <div class="radio-live">
+        🔴 LIVE
+      </div>
+    </div>
+
+    <button id="radioMute" type="button">
+      🔊
+    </button>
 
   </div>
+
+ <audio id="radioAudio" preload="none">
+  <source src="https://late-paper-b3de.nikolaos-pra.workers.dev">
+</audio>
+
+</div>
 
 
   <!-- =========================
@@ -618,7 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
        SCRIPT
        ========================= -->
 
-  <script src="script.js?v=26"></script>
+  <script src="script.js?v=28"></script>
 
 
 </div>
