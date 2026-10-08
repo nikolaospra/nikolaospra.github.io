@@ -1406,3 +1406,15 @@ text-align: center;
     display: block;
     border: 0;
 }
+.twitch-live-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.twitch-live-frame iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+}
