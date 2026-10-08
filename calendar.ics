@@ -6,6 +6,14 @@ METHOD:PUBLISH
 X-WR-CALNAME:Ι.Ν. Παναγίας Ακαθίστου Ύμνου Οίας
 X-WR-TIMEZONE:Europe/Athens
 BEGIN:VEVENT
+UID:60c76302-fa0d-41c5-b148-ede7bceb8286@oia
+DTSTAMP:20261001T084700Z
+DTSTART;TZID=Europe/Athens:20261011T070000
+DTEND;TZID=Europe/Athens:20261011T100000
+SUMMARY:Όρθρος - Θεία Λειτουργία
+LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας «Παναγία Πλατσανή»
+END:VEVENT
+BEGIN:VEVENT
 UID:e77be68c-68a9-42a3-9515-e380576240a0@oia
 DTSTAMP:20261008T150735Z
 DTSTART;TZID=Europe/Athens:20261017T183000
