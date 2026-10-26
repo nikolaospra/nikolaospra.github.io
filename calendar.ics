@@ -1,120 +1,130 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Oia//Calendar//EL
+PRODID:-//OiaChurch//Liturgical Calendar//EL
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Ι.Ν. Παναγίας Ακαθίστου Ύμνου Οίας
 X-WR-TIMEZONE:Europe/Athens
 BEGIN:VEVENT
-UID:b7ed17fc-4000-44d3-ad74-5e4c0d059eb0@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261010T100000
-DTEND;TZID=Europe/Athens:20261010T1015000
-SUMMARY:Τρισάγια
-LOCATION:Κοιμητήριο
-END:VEVENT
-BEGIN:VEVENT
-UID:60c76302-fa0d-41c5-b148-ede7bceb8286@oia
-DTSTAMP:20261001T084700Z
-DTSTART;TZID=Europe/Athens:20261011T070000
-DTEND;TZID=Europe/Athens:20261011T100000
+UID:7f935e4a-f1c1-4d5c-8ecd-c4e053070ca0@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261028T0715
+DTEND;TZID=Europe/Athens:20261028T0930
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας «Παναγία Πλατσανή»
+LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθί
+ στου Ύμνου Οίας Παναγία Πλατσανή
 END:VEVENT
 BEGIN:VEVENT
-UID:e77be68c-68a9-42a3-9515-e380576240a0@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261017T183000
-DTEND;TZID=Europe/Athens:20261017T193000
+UID:2dc50291-cabb-49de-97db-453cecbaae49@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261031T1800
+DTEND;TZID=Europe/Athens:20261031T1900
 SUMMARY:Εσπερινός
-LOCATION:Ιερό Ενοριακό παρεκκλήσι Αγίου Λουκά
+LOCATION:Ιερός Ναός Αγίου Γεωργίου
 END:VEVENT
 BEGIN:VEVENT
-UID:1d0c25ff-f869-41d5-bc34-caa9513e2002@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261018T070000
-DTEND;TZID=Europe/Athens:20261018T100000
+UID:24953712-fa98-4e07-a671-003ce7977974@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261101T0700
+DTEND;TZID=Europe/Athens:20261101T1000
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερό Ενοριακό παρεκκλήσιο Αγίου Λουκά
+LOCATION:Ιερός Ναός Αγίου Γεωργίου
 END:VEVENT
 BEGIN:VEVENT
-UID:5801c06d-1eae-41b6-896d-f96cc3f7566e@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261019T170000
-DTEND;TZID=Europe/Athens:20261019T180000
+UID:caee4c75-591a-4714-96fe-c9df4c0c5cc9@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261102T1800
+DTEND;TZID=Europe/Athens:20261102T1900
+SUMMARY:Πανηγυρικός Εσπερινός
+LOCATION:Ιερός Ναός Αγίου Γεωργίου
+END:VEVENT
+BEGIN:VEVENT
+UID:85588182-8076-46fb-a56e-16c7942a9fdc@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261103T0700
+DTEND;TZID=Europe/Athens:20261103T1000
+SUMMARY:Όρθρος - Θεία Λειτουργία (Ανακομιδή τ
+ ων ιερών λειψάνων του Αγίου Γεωργίου)
+LOCATION:Ιερός Ναός Αγίου Γεωργίου
+END:VEVENT
+BEGIN:VEVENT
+UID:99fcb430-dcdf-46dc-88bc-6d6a71b5eecc@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261107T1700
+DTEND;TZID=Europe/Athens:20261107T1800
 SUMMARY:Εσπερινός
-LOCATION:Ιερό Ενοριακό παρεκκλήσι Αγίου Αρτεμίου
+LOCATION:Ιερό Ενοριακό Παρεκκλήσιο Παμμεγίσ
+ των Ταξιαρχών (Κάστρο)
 END:VEVENT
 BEGIN:VEVENT
-UID:f62a2091-d879-45b0-a78b-02f7a1df90b8@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261019T180000
-DTEND;TZID=Europe/Athens:20261019T190000
+UID:9f7c74c0-f9a2-48a9-8558-ee08cbfc212d@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261107T1830
+DTEND;TZID=Europe/Athens:20261107T1930
 SUMMARY:Εσπερινός
-LOCATION:Ιερό Ενοριακό παρεκκλήσι Αγίας Ματρώνας
+LOCATION:Ιερό Παρεκκλήσιο Παμμεγίστων Ταξια
+ ρχών (Μπαξέδες)
 END:VEVENT
 BEGIN:VEVENT
-UID:c7b831af-e634-4219-8b0a-d80d58b3767b@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261020T071500
-DTEND;TZID=Europe/Athens:20261020T093000
+UID:13574d58-615c-4644-a954-94ff0101f7bb@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261108T0700
+DTEND;TZID=Europe/Athens:20261108T1000
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερό Ενοριακό παρεκκλήσι Αγίας Ματρώνας
+LOCATION:Ιερό Ενοριακό Παρεκκλήσιο Παμμεγίσ
+ των Ταξιαρχών (Κάστρο)
 END:VEVENT
 BEGIN:VEVENT
-UID:3ca2ecbe-2ba2-4a83-aade-1f055516fec0@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261021T071500
-DTEND;TZID=Europe/Athens:20261021T093000
-SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερό Ενοριακό παρεκκλήσι Αγίου Αρτεμίου
-END:VEVENT
-BEGIN:VEVENT
-UID:b49d871e-cfe7-461b-9850-a9adf9e4fa45@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261021T170000
-DTEND;TZID=Europe/Athens:20261021T180000
+UID:ad23bb68-a3ad-4667-997f-957a738c2eea@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261108T1700
+DTEND;TZID=Europe/Athens:20261108T1800
 SUMMARY:Εσπερινός
-LOCATION:Ιερός Ναός Αγίων Επτά Παίδων
+LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθί
+ στου Ύμνου Οίας Παναγία Πλατσανή
 END:VEVENT
 BEGIN:VEVENT
-UID:cea016ef-2cbd-4e97-bc90-fe79a9149db3@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261022T071500
-DTEND;TZID=Europe/Athens:20261022T091500
+UID:9ab9d2b9-9188-409a-a6e2-c0fffdc90c76@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261109T0715
+DTEND;TZID=Europe/Athens:20261109T0930
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ναός Αγίων Επτά Παίδων
+LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθί
+ στου Ύμνου Οίας Παναγία Πλατσανή
 END:VEVENT
 BEGIN:VEVENT
-UID:715f8ca9-d74d-4d73-9c61-0bf3f71b1d90@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261025T070000
-DTEND;TZID=Europe/Athens:20261025T100000
+UID:7c228a1d-8796-4ca6-a420-b8387ca03270@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261111T0715
+DTEND;TZID=Europe/Athens:20261111T0930
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας Παναγία Πλατσανή
+LOCATION:Ιερό Παρεκκλήσιο Ευαγγελισμού της Θ
+ εοτόκου (Φοινικιά)
 END:VEVENT
 BEGIN:VEVENT
-UID:3645fec1-37a9-4675-9850-b589c5ea196c@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261025T173000
-DTEND;TZID=Europe/Athens:20261025T183000
+UID:c79d6efa-22db-4644-b10f-e8b996ad6598@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261111T1700
+DTEND;TZID=Europe/Athens:20261111T1800
 SUMMARY:Εσπερινός
-LOCATION:Ιερός Ναός Αγίου Δημητρίου
+LOCATION:Ιερός Κοιμητηριακός Ναός Αγίου Ιωάν
+ νου του Χρυσοστόμου
 END:VEVENT
 BEGIN:VEVENT
-UID:263edc9e-e91f-4c5e-ad55-ddbea41d5f32@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261026T071500
-DTEND;TZID=Europe/Athens:20261026T091500
+UID:36896906-1251-468f-9282-57d95c7eaf7f@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261112T0715
+DTEND;TZID=Europe/Athens:20261112T0915
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ναός Αγίου Δημητρίου
+LOCATION:Ιερός Κοιμητηριακός Ναός Αγίου Ιωάν
+ νου του Χρυσοστόμου
 END:VEVENT
 BEGIN:VEVENT
-UID:c2685206-1b95-4ec5-bfeb-36d912adbd58@oia
-DTSTAMP:20261008T150735Z
-DTSTART;TZID=Europe/Athens:20261028T071500
-DTEND;TZID=Europe/Athens:20261028T093000
+UID:7cb19f28-2f8b-4b40-a2cb-7a1a921c8bb6@oiachurch.gr
+DTSTAMP:20261026T105300Z
+DTSTART;TZID=Europe/Athens:20261115T0700
+DTEND;TZID=Europe/Athens:20261115T1000
 SUMMARY:Όρθρος - Θεία Λειτουργία
-LOCATION:Ιερός Ενοριακός Ναός Παναγίας Ακαθίστου Ύμνου Οίας Παναγία Πλατσανή
+LOCATION:Ιερός Ναός Αγίου Γεωργίου
 END:VEVENT
 END:VCALENDAR
