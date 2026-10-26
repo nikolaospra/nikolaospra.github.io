@@ -95,8 +95,8 @@ END:VEVENT
 BEGIN:VEVENT
 UID:7c228a1d-8796-4ca6-a420-b8387ca03270@oiachurch.gr
 DTSTAMP:20261026T105300Z
-DTSTART;TZID=Europe/Athens:20261111T0715
-DTEND;TZID=Europe/Athens:20261111T0930
+DTSTART;TZID=Europe/Athens:20261112T0715
+DTEND;TZID=Europe/Athens:20261112T0930
 SUMMARY:Όρθρος - Θεία Λειτουργία
 LOCATION:Ιερό Παρεκκλήσιο Ευαγγελισμού της Θ
  εοτόκου (Φοινικιά)
@@ -104,8 +104,8 @@ END:VEVENT
 BEGIN:VEVENT
 UID:c79d6efa-22db-4644-b10f-e8b996ad6598@oiachurch.gr
 DTSTAMP:20261026T105300Z
-DTSTART;TZID=Europe/Athens:20261111T1700
-DTEND;TZID=Europe/Athens:20261111T1800
+DTSTART;TZID=Europe/Athens:20261112T1700
+DTEND;TZID=Europe/Athens:20261112T1800
 SUMMARY:Εσπερινός
 LOCATION:Ιερός Κοιμητηριακός Ναός Αγίου Ιωάν
  νου του Χρυσοστόμου
@@ -113,8 +113,8 @@ END:VEVENT
 BEGIN:VEVENT
 UID:36896906-1251-468f-9282-57d95c7eaf7f@oiachurch.gr
 DTSTAMP:20261026T105300Z
-DTSTART;TZID=Europe/Athens:20261112T0715
-DTEND;TZID=Europe/Athens:20261112T0915
+DTSTART;TZID=Europe/Athens:20261113T0715
+DTEND;TZID=Europe/Athens:20261113T0915
 SUMMARY:Όρθρος - Θεία Λειτουργία
 LOCATION:Ιερός Κοιμητηριακός Ναός Αγίου Ιωάν
  νου του Χρυσοστόμου
